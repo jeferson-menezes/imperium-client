@@ -1,0 +1,186 @@
+<template>
+	<v-container fluid>
+		<v-row></v-row>
+
+		<v-row>
+			<v-col>
+				<v-card class="pa-sm-3 pa-md-7 pa-xs-0">
+					<v-card-title class="pr-0">
+						<v-icon x-large color="blue">mdi-bookmark</v-icon>Lista de categorias
+					</v-card-title>
+
+					<v-card>
+						<v-card-title primary-title>
+							Categorias
+							<v-spacer></v-spacer>
+							<categoria-form></categoria-form>
+							<v-btn fab small elevation="0" v-on:click="$root.$emit('categoria-form::show','')">
+								<v-icon>mdi-plus</v-icon>
+							</v-btn>
+						</v-card-title>
+						<v-data-table
+							:headers="headers"
+							:items="categorias"
+							:items-per-page="5"
+							:loading="loadingData"
+							loading-text="Carregando..."
+						>
+							<template v-slot:item.icone="{item}">
+								<v-avatar color="grey lighten-4">
+									<v-icon large v-if="item.ativo" :color="item.cor">mdi-{{item.icone}}</v-icon>
+								</v-avatar>
+							</template>
+
+							<template v-slot:item.natureza="{item}">
+								<div class="text-lowercase">
+									<span
+										:class="{'red--text':(item.natureza === 'DESPESA'), 'green--text':!(item.natureza === 'DESPESA')}"
+									>&#10687;</span>
+									{{ item.natureza }}
+								</div>
+							</template>
+
+							<template v-slot:item.ativo="{item}">
+								<v-icon v-if="item.ativo" color="green darken-0">mdi-eye</v-icon>
+								<v-icon v-else color="orange darken-2">mdi-eye-off</v-icon>
+							</template>
+
+							<template v-slot:item.acoes="{item}">
+								<v-btn fab small elevation="0" @click="excluirCategoria(item)">
+									<v-icon>mdi-delete</v-icon>
+								</v-btn>
+								<v-btn fab small elevation="0" @click="$root.$emit('categoria-form::show',item)">
+									<v-icon>mdi-pencil</v-icon>
+								</v-btn>
+								<v-btn fab small elevation="0" @click="inativaCategoria(item)">
+									<v-icon v-if="item.ativo">mdi-eye-off</v-icon>
+									<v-icon v-else>mdi-eye</v-icon>
+								</v-btn>
+							</template>
+						</v-data-table>
+					</v-card>
+				</v-card>
+			</v-col>
+		</v-row>
+	</v-container>
+</template>
+
+<script>
+import { mapState, mapActions } from "vuex";
+import CategoriaForm from "./CategoriaForm";
+import { Confirm } from "../../shared/models/confirm";
+import { Alert } from "../../shared/models/alert";
+
+export default {
+	name: "Categoria",
+
+	components: { CategoriaForm },
+
+	data: () => ({
+		loadingData: false,
+		headers: [
+			{ text: "", sortable: false, value: "icone" },
+			{ text: "Nome", sortable: true, value: "nome" },
+			{ text: "Descricao", sortable: false, value: "descricao" },
+			{ text: "Natureza", sortable: false, value: "natureza" },
+			{ text: "Ativa", value: "ativo" },
+			{ text: "Ações", sortable: false, value: "acoes" }
+		]
+	}),
+
+	computed: {
+		...mapState("categoria", ["categorias"])
+	},
+
+	methods: {
+		...mapActions("categoria", [
+			"ActionListarCategorias",
+			"ActionExcluirCategoria",
+			"ActionInativarCategoria"
+		]),
+
+		excluirCategoria(categoria) {
+			this.$root.$emit(
+				"sweet-confirm::show",
+				new Confirm("Deseja excluir a categoria?")
+			);
+
+			this.$root.$once("sweet-confirm::result", async payload => {
+				if (payload) {
+					const id = categoria.id;
+					try {
+						await this.ActionExcluirCategoria({ id });
+						this.$root.$emit(
+							"sweet-alert::show",
+							new Alert(
+								"Categoria excluida com sucesso!",
+								"success"
+							)
+						);
+					} catch (error) {
+						this.$root.$emit(
+							"sweet-alert::show",
+							new Alert(
+								error.body.message ||
+									"Houve um erro para excluir!",
+								"error",
+								4000
+							)
+						);
+					}
+				}
+			});
+		},
+
+		editarCategoria(categoria) {
+			this.$root.$emit(
+				"sweet-alert::show",
+				new Alert("Salvo com sucesso!", "warning")
+			);
+		},
+
+		inativaCategoria(categoria) {
+			const message = categoria.ativo ? "inativar" : "ativar";
+			this.$root.$emit(
+				"sweet-confirm::show",
+				new Confirm("Deseja " + message + " a categoria?")
+			);
+
+			this.$root.$once("sweet-confirm::result", async payload => {
+				if (payload) {
+					const id = categoria.id;
+					try {
+						await this.ActionInativarCategoria({ id }, {});
+						const message = categoria.ativo
+							? "inativada"
+							: "ativada";
+
+						this.$root.$emit(
+							"sweet-alert::show",
+							new Alert(
+								"Categoria " + message + " com sucesso!",
+								"success"
+							)
+						);
+					} catch (error) {
+						this.$root.$emit(
+							"sweet-alert::show",
+							new Alert(
+								error.body.message ||
+									"Houve um erro para inativar!",
+								"error",
+								4000
+							)
+						);
+					}
+				}
+			});
+		}
+	},
+
+	mounted() {
+		this.loadingData = true;
+		this.ActionListarCategorias().finally(() => (this.loadingData = false));
+	}
+};
+</script>

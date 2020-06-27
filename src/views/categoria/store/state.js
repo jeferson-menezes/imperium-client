@@ -1,0 +1,4 @@
+// categoria
+export default {
+    categorias: []
+}
