@@ -4,7 +4,7 @@
 		<sweet-toast></sweet-toast>
 		<sweet-confirm></sweet-confirm>
 		<sweet-alert></sweet-alert>
-		<v-navigation-drawer v-show="isLogged()" app v-model="drawer">
+		<v-navigation-drawer stateless v-show="isLogged()" app v-model="drawer">
 			<v-list>
 				<v-list-item v-for="(item, index) in routerLinks" :key="index" :to="item.path">
 					<v-list-item-icon>

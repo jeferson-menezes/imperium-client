@@ -1,5 +1,10 @@
 export default {
     adicionar: { method: 'post', url: 'contas' },
-    listarPorUsuario: { method: 'get', url: 'contas/usuario/{id}'},
-    listarTipoContas: { method: 'get', url: 'tipos/conta'}
+    atualizar: { method: 'put', url: 'contas/{id}' },
+    detalhar: { method: 'get', url: 'contas/{id}' },
+    alterarSaldo: { method: 'patch', url: 'contas/{id}' },
+    inativar: { method: 'patch', url: 'contas/{id}/inativa' },
+    excluir: { method: 'delete', url: 'contas/{id}' },
+    listarPorUsuario: { method: 'get', url: 'contas/usuario/{id}' },
+    listarTipoContas: { method: 'get', url: 'tipos/conta' },
 }

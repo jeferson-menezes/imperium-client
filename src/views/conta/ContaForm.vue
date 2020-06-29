@@ -2,18 +2,20 @@
 	<v-dialog v-model="dialog" persistent max-width="330px">
 		<v-card>
 			<v-card-title>
-				<span class="headline">Adicionar Conta</span>
+				<span class="headline">{{form.id ? 'Atualizar':'Adicionar'}} Conta</span>
 			</v-card-title>
 			<v-card-text>
 				<v-form ref="form" v-model="valid">
 					<v-text-field
-						v-money="money"
-						v-model.lazy="form.saldo"
+						v-show="!form.id"
+						v-model="form.saldo"
 						:rules="rules.saldo"
 						label="Saldo"
 						type="text"
 					></v-text-field>
+
 					<v-text-field v-model="form.nome" :rules="rules.nome" label="Nome"></v-text-field>
+
 					<v-text-field v-model="form.descricao" :rules="rules.descricao" label="Descrição"></v-text-field>
 
 					<v-select
@@ -29,13 +31,14 @@
 							v-model="form.incluiSoma"
 							:label=" form.incluiSoma ?'Incluir as somas' :'Não incluir as somas'"
 						></v-switch>
+
 						<v-switch v-model="form.ativo" :label=" form.ativo ?'Ativo' :'Inativo'"></v-switch>
 					</v-row>
 				</v-form>
 			</v-card-text>
 			<v-card-actions>
 				<v-spacer></v-spacer>
-				<v-btn color="blue darken-1" text @click="dialog = false">cancelar</v-btn>
+				<v-btn color="blue darken-1" text @click="close()">cancelar</v-btn>
 				<v-btn :loading="loading" :disabled="!valid" color="blue darken-1" text @click="salvar()">salvar</v-btn>
 			</v-card-actions>
 		</v-card>
@@ -48,7 +51,7 @@ import { mapActions, mapState } from "vuex";
 import { required } from "../../shared/rules";
 import { Toast } from "../../shared/models/toast";
 import { moeda, toDolar } from "../../shared/helpers/currency";
-import { Conta } from "./conta";
+import { ContaModel } from "./conta.model";
 
 export default {
 	name: "ContaForm",
@@ -59,6 +62,7 @@ export default {
 		valid: false,
 		loading: false,
 		form: {
+			id: 0,
 			saldo: 0,
 			nome: "",
 			descricao: "",
@@ -77,36 +81,80 @@ export default {
 	methods: {
 		...mapActions("conta", [
 			"ActionListarTipoContas",
-			"ActionAdicionarConta"
+			"ActionAdicionarConta",
+			"ActionDetalharConta",
+			"ActionAtualizarConta"
 		]),
 
 		async salvar() {
 			this.loading = true;
 			try {
-                const {ativo, saldo, nome, descricao, incluiSoma, tipoContaId, usuarioId } = this.form
-                const conta = new Conta(ativo, descricao, incluiSoma, nome, toDolar(saldo), tipoContaId, this.user.id);
-                
-                console.log(conta);
-                
+				const {
+					id,
+					ativo,
+					saldo,
+					nome,
+					descricao,
+					incluiSoma,
+					tipoContaId,
+					usuarioId
+				} = this.form;
+
+				const conta = new ContaModel(
+					id,
+					ativo,
+					descricao,
+					incluiSoma,
+					nome,
+					toDolar(saldo),
+					tipoContaId,
+					this.user.id
+				);
+
 				let message = "Conta cadastrada com sucesso!";
-				await this.ActionAdicionarConta(conta);
+
+				if (this.form.id) {
+					await this.ActionAtualizarConta(conta);
+					message = "Conta atualizada com sucesso!";
+				} else await this.ActionAdicionarConta(conta);
 
 				this.$root.$emit(
 					"sweet-toast::show",
-					new Toast("Conta cadastrada com sucesso!", "success")
+					new Toast(message, "success")
 				);
 				this.$refs.form.reset();
 				this.dialog = false;
 			} catch (error) {
-                console.log(error);
-                
+				const { err } = error.body;
+
 				this.$root.$emit(
 					"sweet-toast::show",
-					new Toast("Houve um erro ao adicionar a conta!", "error")
+					new Toast(
+						err.message || "Houve um erro ao adicionar a conta!",
+						"error"
+					)
 				);
 			} finally {
 				this.loading = false;
 			}
+		},
+
+		async populaForm(payload) {
+			try {
+				const conta = await this.ActionDetalharConta({ id: payload });
+				Object.keys(conta.data).forEach(e => {
+					if (e === "tipo")
+						this.form.tipoContaId = conta.data.tipo.id;
+					else this.form[e] = conta.data[e];
+				});
+			} catch (error) {
+				console.log(error);
+			}
+		},
+
+		close() {
+			this.$refs.form.reset();
+			this.dialog = false;
 		}
 	},
 
@@ -121,6 +169,9 @@ export default {
 
 	created() {
 		this.$root.$on("conta-form::show", payload => {
+			if (payload) {
+				this.populaForm(payload);
+			}
 			this.dialog = true;
 		});
 	}

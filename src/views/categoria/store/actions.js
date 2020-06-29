@@ -27,3 +27,8 @@ export const ActionInativarCategoria = ({ commit }, payload) => {
     return services.categoria.inativar(payload, "")
         .then(res => commit(types.UPDATE_CATEGORIA, res.body))
 }
+
+export const ActionListarPorNatureza = ({ commit }, payload) => {
+    return services.categoria.listarPorNatureza(payload)
+        .then(res => commit(types.SET_CATEGORIAS, res.body))
+}

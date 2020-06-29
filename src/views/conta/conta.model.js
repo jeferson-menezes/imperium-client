@@ -1,6 +1,7 @@
-export class Conta {
+export class ContaModel {
 
-    constructor(ativo, descricao, incluiSoma, nome, saldo, tipoContaId, usuarioId) {
+    constructor(id, ativo, descricao, incluiSoma, nome, saldo, tipoContaId, usuarioId) {
+        this.id = id
         this.ativo = ativo;
         this.descricao = descricao;
         this.incluiSoma = incluiSoma;

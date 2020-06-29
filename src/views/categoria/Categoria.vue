@@ -84,7 +84,7 @@ export default {
 			{ text: "Descricao", sortable: false, value: "descricao" },
 			{ text: "Natureza", sortable: false, value: "natureza" },
 			{ text: "Ativa", value: "ativo" },
-			{ text: "Ações", sortable: false, value: "acoes" }
+			{ text: "Ações", sortable: false, value: "acoes", align: "center" }
 		]
 	}),
 
@@ -150,7 +150,7 @@ export default {
 				if (payload) {
 					const id = categoria.id;
 					try {
-						await this.ActionInativarCategoria({ id }, {});
+						await this.ActionInativarCategoria({ id });
 						const message = categoria.ativo
 							? "inativada"
 							: "ativada";
