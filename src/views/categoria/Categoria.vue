@@ -6,7 +6,7 @@
 			<v-col>
 				<v-card class="pa-sm-3 pa-md-7 pa-xs-0">
 					<v-card-title class="pr-0">
-						<v-icon x-large color="blue">mdi-bookmark</v-icon>Lista de categorias
+						<v-icon x-large color="pink accent-2">mdi-bookmark</v-icon>Lista de categorias
 					</v-card-title>
 
 					<v-card>

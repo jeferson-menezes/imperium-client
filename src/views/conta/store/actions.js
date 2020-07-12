@@ -1,14 +1,9 @@
 import services from '@/http'
 import * as types from './mutation-types'
 
-export const ActionListarPorUsuario = ({ commit }, payload) => {
+export const ActionListarContasPorUsuario = ({ commit }, payload) => {
     return services.conta.listarPorUsuario(payload)
         .then(res => commit(types.SET_CONTAS, res.body))
-}
-
-export const ActionListarTipoContas = ({ commit }, payload) => {
-    return services.conta.listarTipoContas()
-        .then(res => commit(types.SET_TIPOS_CONTAS, res.data))
 }
 
 export const ActionAdicionarConta = ({ commit }, payload) => {
@@ -30,12 +25,13 @@ export const ActionAlterarSaldo = ({ commit }, payload) => {
         .then(res => commit(types.UPDATE_CONTA, res.body))
 }
 
-export const ActionExcluirConta = ({ commit }, payload) => {
-    return services.conta.excluir(payload)
-        .then(res => commit(types.REMOVE_CONTA, payload.id))
-}
-
 export const ActionInativarConta = ({ commit }, payload) => {
     return services.conta.inativar(payload, "")
         .then(res => commit(types.UPDATE_CONTA, res.body))
+}
+
+// tipo conta
+export const ActionListarTipoContas = ({ commit }, payload) => {
+    return services.conta.listarTipoContas()
+        .then(res => commit(types.SET_TIPOS_CONTAS, res.data))
 }

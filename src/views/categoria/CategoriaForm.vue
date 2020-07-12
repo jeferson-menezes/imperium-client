@@ -12,7 +12,7 @@
 					<v-form ref="form" v-model="valid">
 						<v-row>
 							<v-col cols="12">
-								<v-radio-group v-model="form.natureza" row>
+								<v-radio-group v-model="form.natureza" :rules="rules.natureza" row>
 									<v-radio label="Despesa" color="red" value="DESPESA"></v-radio>
 									<v-radio label="Receita" color="success" value="RECEITA"></v-radio>
 								</v-radio-group>
@@ -103,6 +103,7 @@ export default {
 			cor: ""
 		},
 		rules: {
+            natureza: [required('A natureza é obrigatória')],
 			nome: [required("O nome é obrigatório")],
 			descricao: [required("A descrição é obrigatória")],
 			natureza: [required("A natureza é obrigatória")]
@@ -146,7 +147,7 @@ export default {
 				this.$refs.form.reset();
 				this.dialog = false;
 			} catch (error) {
-				console.log(error);
+				console.error(error);
 				this.$root.$emit(
 					"sweet-toast::show",
 					new Toast(

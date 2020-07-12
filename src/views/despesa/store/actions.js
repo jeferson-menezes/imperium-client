@@ -1,41 +1,57 @@
 import services from '@/http'
 import * as types from './mutation-types'
 
-export const ActionListarPorUsuario = ({ commit }, payload) => {
-    return services.conta.listarPorUsuario(payload)
-        .then(res => commit(types.SET_CONTAS, res.body))
+
+export const ActionAdicionarDespesa = ({ commit }, payload) => {
+    return services.despesa.adicionar(payload)
+        .then(res => commit(types.ADD_DESPESA, res.data))
 }
 
-export const ActionListarTipoContas = ({ commit }, payload) => {
-    return services.conta.listarTipoContas()
-        .then(res => commit(types.SET_TIPOS_CONTAS, res.data))
+export const ActionListarDespesas = ({ commit }, payload) => {
+    return services.despesa.listar(payload)
+        .then(res => commit(types.SET_DESPESAS, res.data))
 }
 
-export const ActionAdicionarConta = ({ commit }, payload) => {
-    return services.conta.adicionar(payload)
-        .then(res => commit(types.ADD_CONTA, res.data))
+export const ActionDetalharDespesa = ({ commit }, payload) => {
+    return services.despesa.detalhar(payload)
 }
 
-export const ActionDetalharConta = ({ commit }, payload) => {
-    return services.conta.detalhar(payload)
+export const ActionAtualizarDespesa = ({ commit }, payload) => {
+    return services.despesa.atualizar({ id: payload.id }, payload)
+        .then(res => commit(types.UPDATE_DESPESA, res.data))
 }
 
-export const ActionAtualizarConta = ({ commit }, payload) => {
-    return services.conta.atualizar({ id: payload.id }, payload)
-        .then(res => commit(types.UPDATE_CONTA, res.body))
+export const ActionFinalizarDespesa = ({ commit }, payload) => {
+    return services.despesa.finaliza(payload, "")
+        .then(res => commit(types.UPDATE_DESPESA, res.data))
 }
 
-export const ActionAlterarSaldo = ({ commit }, payload) => {
-    return services.conta.alterarSaldo({ id: payload.id }, payload)
-        .then(res => commit(types.UPDATE_CONTA, res.body))
+export const ActionAlterarConta = ({ commit }, payload) => {
+    return services.despesa.alterarConta({ id: payload.id }, payload)
+        .then(res => commit(types.UPDATE_DESPESA, res.data))
 }
 
-export const ActionExcluirConta = ({ commit }, payload) => {
-    return services.conta.excluir(payload)
-        .then(res => commit(types.REMOVE_CONTA, payload.id))
+export const ActionAlterarValor = ({ commit }, payload) => {
+    return services.despesa.alterarValor({ id: payload.id }, payload)
+        .then(res => commit(types.UPDATE_DESPESA, res.data))
 }
 
-export const ActionInativarConta = ({ commit }, payload) => {
-    return services.conta.inativar(payload, "")
-        .then(res => commit(types.UPDATE_CONTA, res.body))
+export const ActionExcluirDespesa = ({ commit }, payload) => {
+    return services.despesa.excluir(payload)
+        .then(res => commit(types.REMOVE_DESPESA, payload.id))
+}
+
+export const ActionListarPorData = ({ commit }, payload) => {
+    return services.despesa.listarPorData(payload)
+        .then(res => commit(types.SET_DESPESAS, res.data))
+}
+
+export const ActionListarPorDescricao = ({ commit }, payload) => {
+    return services.despesa.listarPorDescricao(payload)
+        .then(res => commit(types.SET_DESPESAS, res.data))
+}
+
+export const ActionListarPorMes = ({ commit }, payload) => {
+    return services.despesa.listarPorMes(payload)
+        .then(res => commit(types.SET_DESPESAS, res.data))
 }

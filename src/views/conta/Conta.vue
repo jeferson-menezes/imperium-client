@@ -5,7 +5,7 @@
 			<v-col>
 				<v-card class="pa-sm-3 pa-md-7 pa-xs-0">
 					<v-card-title class="pr-0">
-						<v-icon x-large color="blue">mdi-bookmark</v-icon>Lista de contas
+						<v-icon x-large color="blue accent-2">mdi-bookmark</v-icon>Lista de contas
 					</v-card-title>
 
 					<v-card>
@@ -13,7 +13,7 @@
 							Contas
 							<v-spacer></v-spacer>
 							<conta-form></conta-form>
-							<v-btn fab small elevation="0" v-on:click="$root.$emit('conta-form::show','')">
+							<v-btn color="blue accent-2" dark fab small elevation="0" v-on:click="$root.$emit('conta-form::show','')">
 								<v-icon>mdi-plus</v-icon>
 							</v-btn>
 						</v-card-title>
@@ -52,13 +52,19 @@
 									<v-icon v-else>mdi-eye</v-icon>
 								</v-btn>
 
-								<v-btn fab small elevation="0" @click="excluirConta(item)">
+								<!-- <v-btn fab small elevation="0" @click="excluirConta(item)">
 									<v-icon>mdi-delete</v-icon>
-								</v-btn>
+								</v-btn>-->
 							</template>
 						</v-data-table>
 					</v-card>
 				</v-card>
+			</v-col>
+		</v-row>
+
+		<v-row>
+			<v-col xs='12' sm='6' md="4">
+				<transferencias></transferencias>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -68,13 +74,14 @@
 import { mapActions, mapState } from "vuex";
 import ContaForm from "./ContaForm";
 import ContaSaldoForm from "./ContaSaldoForm";
+import Transferencias from "../transferencia/Transferencias";
 import { Confirm } from "../../shared/models/confirm";
 import { Alert } from "../../shared/models/alert";
 
 export default {
 	name: "Conta",
 
-	components: { ContaForm, ContaSaldoForm },
+	components: { ContaForm, ContaSaldoForm, Transferencias },
 
 	data: () => ({
 		loadingData: false,
@@ -96,42 +103,10 @@ export default {
 
 	methods: {
 		...mapActions("conta", [
-			"ActionListarPorUsuario",
+			"ActionListarContasPorUsuario",
 			"ActionExcluirConta",
 			"ActionInativarConta"
 		]),
-
-		excluirConta(conta) {
-			this.$root.$emit(
-				"sweet-confirm::show",
-				new Confirm(
-					"Deseja realmente excluir a conta " + conta.nome + "?"
-				)
-			);
-			this.$root.$once("sweet-confirm::result", async payload => {
-				if (payload) {
-					const id = conta.id;
-					try {
-						await this.ActionExcluirConta({ id });
-						this.$root.$emit(
-							"sweet-alert::show",
-							new Alert("Conta excluida com sucesso!", "success")
-						);
-					} catch (error) {
-						console.log(error);
-						this.$root.$emit(
-							"sweet-alert::show",
-							new Alert(
-								error.body.message ||
-									"Houve um erro para excluir!",
-								"error",
-								4000
-							)
-						);
-					}
-				}
-			});
-		},
 
 		inativaConta(conta) {
 			const message = conta.ativo ? "inativar" : "ativar";
@@ -156,7 +131,7 @@ export default {
 							)
 						);
 					} catch (error) {
-						console.log("ERR", error.body);
+						console.error(error.body);
 						this.$root.$emit(
 							"sweet-alert::show",
 							new Alert(
@@ -174,7 +149,7 @@ export default {
 
 	mounted() {
 		this.loadingData = true;
-		this.ActionListarPorUsuario({ id: this.user.id }).finally(
+		this.ActionListarContasPorUsuario({ id: this.user.id }).finally(
 			() => (this.loadingData = false)
 		);
 	}

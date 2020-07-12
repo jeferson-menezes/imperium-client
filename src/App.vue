@@ -4,7 +4,8 @@
 		<sweet-toast></sweet-toast>
 		<sweet-confirm></sweet-confirm>
 		<sweet-alert></sweet-alert>
-		<v-navigation-drawer stateless v-show="isLogged()" app v-model="drawer">
+		<notification></notification>
+		<v-navigation-drawer v-show="isLogged()" app v-model="drawer">
 			<v-list>
 				<v-list-item v-for="(item, index) in routerLinks" :key="index" :to="item.path">
 					<v-list-item-icon>
@@ -18,16 +19,15 @@
 			</v-list>
 		</v-navigation-drawer>
 
-		<v-app-bar v-show="isLogged()" dense app flat>
-			<v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+		<v-app-bar v-show="isLogged()" dense app flat color="transparent" elevation="1">
+			<v-btn fab small color="green accent-3" class="mr-5">
+				<v-app-bar-nav-icon @click.stop="drawer = !drawer" class="white--text"></v-app-bar-nav-icon>
+			</v-btn>
 			<v-toolbar-title>Imperium</v-toolbar-title>
 			<loading-progress></loading-progress>
 			<v-spacer></v-spacer>
-			<v-btn icon>
-				<v-icon>mdi-heart</v-icon>
-			</v-btn>
-			<v-btn icon>
-				<v-icon>mdi-magnify</v-icon>
+			<v-btn fab small color="green accent-3" elevation="0">
+				<v-icon medium color="white">mdi-account-circle</v-icon>
 			</v-btn>
 		</v-app-bar>
 
@@ -48,6 +48,7 @@ import SweetConfirm from "./shared/components/SweetConfirm";
 import SweetAlert from "./shared/components/SweetAlert";
 import LoadingProgress from "./shared/components/LoadingProgress";
 import LoadingOverlay from "./shared/components/LoadingOverlay";
+import Notification from "./shared/components/Notifications";
 
 export default {
 	name: "App",
@@ -57,7 +58,8 @@ export default {
 		SweetConfirm,
 		SweetAlert,
 		LoadingProgress,
-		LoadingOverlay
+		LoadingOverlay,
+		Notification
 	},
 
 	data: () => ({

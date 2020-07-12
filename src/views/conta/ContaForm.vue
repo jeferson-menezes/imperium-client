@@ -148,7 +148,7 @@ export default {
 					else this.form[e] = conta.data[e];
 				});
 			} catch (error) {
-				console.log(error);
+				console.error(error);
 			}
 		},
 

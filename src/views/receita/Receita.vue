@@ -5,21 +5,21 @@
 			<v-col>
 				<v-card class="pa-sm-3 pa-md-7 pa-xs-0">
 					<v-card-title class="pr-0">
-						<v-icon x-large color="red accent-2">mdi-bookmark</v-icon>Lista de despesas
+						<v-icon x-large color="green accent-2">mdi-bookmark</v-icon>Lista de receitas
 					</v-card-title>
 					<v-card>
 						<v-card-title primary-title>
-							<despesa-filtra :page="page"></despesa-filtra>
+							<receita-filtra :page="page"></receita-filtra>
 							<v-spacer></v-spacer>
-							<despesa-form></despesa-form>
-							<v-btn fab small elevation="0" v-on:click="$root.$emit('despesa-form::show','')">
+							<receita-form></receita-form>
+							<v-btn fab small elevation="0" v-on:click="$root.$emit('receita-form::show','')">
 								<v-icon>mdi-plus</v-icon>
 							</v-btn>
 						</v-card-title>
 
 						<v-data-table
 							:headers="headers"
-							:items="despesas.content"
+							:items="receitas.content"
 							:loading="loadingData"
 							loading-text="Carregando..."
 							hide-default-footer
@@ -30,34 +30,36 @@
 							<template v-slot:item.hora="{item}">{{item.hora }}</template>
 							<template v-slot:item.concluida="{item}">
 								<div class="text-lowercase">
-									<span v-if="item.concluida" class="green--text">&#9679; pago</span>
-									<span v-else class="red--text">&#9679; devendo</span>
+									<span v-if="item.concluida" class="green--text">&#9679; recebida</span>
+									<span v-else class="red--text">&#9679; pendente</span>
 								</div>
 							</template>
+
 							<template v-slot:item.acoes="{item}">
-								<v-btn fab small elevation="0" @click="$root.$emit('despesa-form::show', item.id)">
+								<v-btn fab small elevation="0" @click="$root.$emit('receita-form::show', item.id)">
 									<v-icon>mdi-pencil</v-icon>
 								</v-btn>
-								<v-btn v-show="!item.concluida" fab small elevation="0" @click="pagarDespesa(item)">
+								<v-btn v-show="!item.concluida" fab small elevation="0" @click="receberReceita(item)">
 									<v-icon>mdi-account-cash</v-icon>
 								</v-btn>
 								<v-btn fab small elevation="0">
-									<despesa-altera-conta :despesa="item"></despesa-altera-conta>
+									<receita-altera-conta :receita="item"></receita-altera-conta>
 								</v-btn>
 								<v-btn fab small elevation="0">
-									<despesa-altera-valor :despesa="item"></despesa-altera-valor>
+									<receita-altera-valor :receita="item"></receita-altera-valor>
 								</v-btn>
-								<v-btn fab small elevation="0" @click="excluirDespesa(item)">
+								<v-btn fab small elevation="0" @click="excluirReceita(item)">
 									<v-icon>mdi-delete</v-icon>
 								</v-btn>
 							</template>
 						</v-data-table>
+
 						<div class="text-center pa-2">
 							<v-pagination
 								@input="listar"
 								v-model="page"
 								total-visible="10"
-								:length="despesas.totalPages"
+								:length="receitas.totalPages"
 							></v-pagination>
 						</div>
 					</v-card>
@@ -69,24 +71,20 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import DespesaForm from "./DespesaForm";
-import DespesaAlteraConta from "./DespesaAlteraConta";
-import DespesaAlteraValor from "./DespesaAlteraValor";
-import DespesaFiltra from "./DespesaFiltra";
 import { Confirm } from "../../shared/models/confirm";
-import { Alert } from "../../shared/models/alert";
-import { parseISO } from "date-fns";
-
+import ReceitaForm from "./ReceitaForm";
+import ReceitaAlteraConta from "./ReceitaAlteraConta";
+import ReceitaAlteraValor from "./ReceitaAlteraValor";
+import ReceitaFiltra from './ReceitaFiltra'
 export default {
-	name: "Despesa",
+	name: "Receita",
 
 	components: {
-		DespesaForm,
-		DespesaAlteraConta,
-		DespesaAlteraValor,
-		DespesaFiltra
+		ReceitaForm,
+        ReceitaAlteraConta,
+        ReceitaAlteraValor,
+        ReceitaFiltra
 	},
-
 	data: () => ({
 		loadingData: false,
 		headers: [
@@ -96,7 +94,7 @@ export default {
 			{ text: "Conta", sortable: false, value: "contaNome" },
 			{ text: "Data", sortable: false, value: "data" },
 			{ text: "Hora", value: "hora" },
-			{ text: "Pago", value: "concluida" },
+			{ text: "Recebido", value: "concluida" },
 			{ text: "Ações", sortable: false, value: "acoes", align: "center" }
 		],
 		page: 1,
@@ -104,37 +102,40 @@ export default {
 	}),
 
 	computed: {
-		...mapState("despesa", ["despesas"]),
+		...mapState("receita", ["receitas"]),
 		...mapState("auth", ["user"])
 	},
 
 	methods: {
-		...mapActions("despesa", [
-			"ActionListarDespesas",
-			"ActionFinalizarDespesa",
-			"ActionExcluirDespesa"
+		...mapActions("receita", [
+			"ActionListarReceitas",
+			"ActionFinalizarReceita",
+			"ActionExcluirReceita"
 		]),
 
 		listar() {
 			this.loadingData = true;
-			this.ActionListarDespesas({
+			this.ActionListarReceitas({
 				page: this.page - 1,
 				size: 10,
 				id: this.user.id
 			}).finally(() => (this.loadingData = false));
 		},
 
-		pagarDespesa(despesa) {
-			const message = "Confirma o pagamento da despesa!";
+		receberReceita(receita) {
+			const message = "Confirma o recebimento da receita!";
 			this.$root.$emit("sweet-confirm::show", new Confirm(message));
 			this.$root.$once("sweet-confirm::result", async payload => {
 				if (payload) {
 					try {
-						const id = despesa.id;
-						await this.ActionFinalizarDespesa({ id });
+						const id = receita.id;
+						await this.ActionFinalizarReceita({ id });
 						this.$root.$emit(
 							"sweet-alert::show",
-							new Alert("Despesa paga com sucesso!", "success")
+							new Alert(
+								"Receita recebida com sucesso!",
+								"success"
+							)
 						);
 					} catch (error) {
 						console.error(error.body);
@@ -152,24 +153,24 @@ export default {
 			});
 		},
 
-		excluirDespesa(despesa) {
+		excluirReceita(receita) {
 			this.$root.$emit(
 				"sweet-confirm::show",
 				new Confirm(
-					"Deseja realmente excluir a despesa " +
-						despesa.descricao +
+					"Deseja realmente excluir a receita " +
+						receita.descricao +
 						"?"
 				)
 			);
 			this.$root.$once("sweet-confirm::result", async payload => {
 				if (payload) {
 					try {
-						const { id } = despesa;
-						await this.ActionExcluirDespesa({ id });
+						const { id } = receita;
+						await this.ActionExcluirReceita({ id });
 						this.$root.$emit(
 							"sweet-alert::show",
 							new Alert(
-								"Despesa excluida com sucesso!",
+								"Receita excluida com sucesso!",
 								"success"
 							)
 						);

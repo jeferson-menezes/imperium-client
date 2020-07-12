@@ -2,7 +2,7 @@
 	<v-dialog v-model="dialog" persistent max-width="330px">
 		<v-card>
 			<v-card-title>
-				<span class="headline">{{form.id ? 'Atualizar':'Adicionar'}} Despesa</span>
+				<span class="headline">{{form.id ? 'Atualizar':'Adicionar'}} Receita</span>
 			</v-card-title>
 			<v-card-text>
 				<v-form ref="form" v-model="valid">
@@ -44,7 +44,7 @@
 					<v-switch
 						v-show="!form.id"
 						v-model="form.concluida"
-						:label=" form.concluida ?'Já foi paga' :'Não foi paga'"
+						:label=" form.concluida ?'Já foi recebida' :'Não foi recebida'"
 					></v-switch>
 				</v-form>
 			</v-card-text>
@@ -57,6 +57,8 @@
 	</v-dialog>
 </template>
 
+
+
 <script>
 import { mapActions, mapState } from "vuex";
 import { required } from "../../shared/rules";
@@ -67,7 +69,7 @@ import { parseISO } from "date-fns";
 import { zonedTimeToUtc } from "date-fns-tz";
 
 export default {
-	name: "DespesaForm",
+	name: "ReceitaForm",
 
 	components: { DatePickers, TimePickers },
 
@@ -97,10 +99,10 @@ export default {
 	methods: {
 		...mapActions("categoria", ["ActionListarCategoriasPorNatureza"]),
 		...mapActions("conta", ["ActionListarContasPorUsuario"]),
-		...mapActions("despesa", [
-			"ActionAdicionarDespesa",
-			"ActionDetalharDespesa",
-			"ActionAtualizarDespesa"
+		...mapActions("receita", [
+			"ActionAdicionarReceita",
+			"ActionDetalharReceita",
+			"ActionAtualizarReceita"
 		]),
 
 		close() {
@@ -120,8 +122,7 @@ export default {
 
 		async detelharForm(id) {
 			try {
-				const { data } = await this.ActionDetalharDespesa({ id });
-				console.log(data);
+				const { data } = await this.ActionDetalharReceita({ id });
 				Object.keys(this.form).forEach(e => {
 					if (e === "categoriaId")
 						this.form.categoriaId = data.categoria.id;
@@ -154,11 +155,11 @@ export default {
 
 		async salvar() {
 			try {
-				let message = "Despesa salva com sucesso!";
+				let message = "Receita salva com sucesso!";
 				if (this.form.id) {
-					await this.ActionAtualizarDespesa(this.form);
-					message = "Despesa atualizada com sucesso!";
-				} else await this.ActionAdicionarDespesa(this.form);
+					await this.ActionAtualizarReceita(this.form);
+					message = "Receita atualizada com sucesso!";
+				} else await this.ActionAdicionarReceita(this.form);
 
 				this.$root.$emit(
 					"sweet-toast::show",
@@ -199,12 +200,12 @@ export default {
 	},
 
 	mounted() {
-		this.ActionListarCategoriasPorNatureza({ natureza: "DESPESA" });
-		this.ActionListarContasPorUsuario({ id: this.user.id });
+		this.ActionListarCategoriasPorNatureza({ natureza: "RECEITA" });
+		// this.ActionListarContasPorUsuario({ id: this.user.id });
 	},
 
 	created() {
-		this.$root.$on("despesa-form::show", payload => {
+		this.$root.$on("receita-form::show", payload => {
 			if (payload) this.populaForm(payload);
 			else this.dialog = true;
 		});

@@ -4,7 +4,6 @@ export default {
     detalhar: { method: 'get', url: 'contas/{id}' },
     alterarSaldo: { method: 'patch', url: 'contas/{id}' },
     inativar: { method: 'patch', url: 'contas/{id}/inativa' },
-    excluir: { method: 'delete', url: 'contas/{id}' },
     listarPorUsuario: { method: 'get', url: 'contas/usuario/{id}' },
     listarTipoContas: { method: 'get', url: 'tipos/conta' },
 }
