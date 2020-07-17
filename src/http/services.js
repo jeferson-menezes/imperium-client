@@ -1,3 +1,4 @@
+import { services as home } from '@/views/home'
 import { services as auth } from '@/core/auth'
 import { services as conta } from '@/views/conta'
 import { services as categoria } from '@/views/categoria'
@@ -6,6 +7,7 @@ import { services as receita } from '@/views/receita'
 import { services as transferencia } from '@/views/transferencia'
 
 export default {
+    home,
     auth,
     conta,
     categoria,

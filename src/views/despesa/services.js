@@ -10,5 +10,5 @@ export default {
     alterarValor: { method: 'patch', url: 'despesas/{id}/altera/valor' },
     listarPorData: { method: 'get', url: 'despesas/filtra/usuario/{id}/data/{data}' },
     listarPorDescricao: { method: 'get', url: 'despesas/filtra/usuario/{id}/descricao/{descricao}' },
-    listarPorMes: { method: 'get', url: 'despesas/filtra/usuario/{id}/mes/{mes}' }
+    filtrarPorMes: { method: 'get', url: 'despesas/filtra/usuario/{id}/mes/{mes}' }
 }

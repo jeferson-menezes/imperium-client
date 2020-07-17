@@ -1,3 +1,4 @@
+import { store as home } from '@/views/home'
 import { store as auth } from '@/core/auth'
 import { store as conta } from '@/views/conta'
 import { store as categoria } from '@/views/categoria'
@@ -7,6 +8,7 @@ import { store as transferencia } from '@/views/transferencia'
 
 
 export default {
+    home,
     auth,
     conta,
     categoria,

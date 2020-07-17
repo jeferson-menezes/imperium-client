@@ -51,7 +51,7 @@ export const ActionListarPorDescricao = ({ commit }, payload) => {
         .then(res => commit(types.SET_DESPESAS, res.data))
 }
 
-export const ActionListarPorMes = ({ commit }, payload) => {
-    return services.despesa.listarPorMes(payload)
+export const ActionFiltrarPorMes = ({ commit }, payload) => {
+    return services.despesa.filtrarPorMes(payload)
         .then(res => commit(types.SET_DESPESAS, res.data))
 }

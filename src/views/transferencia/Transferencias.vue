@@ -45,6 +45,8 @@
 				<v-icon x-large>mdi-chevron-left</v-icon>
 			</v-btn>
 			<v-spacer></v-spacer>
+			<span class="text-center">{{this.page + 1}}/{{transferencias.totalPages}}</span>
+			<v-spacer></v-spacer>
 			<v-btn :disabled="transferencias.totalPages === page + 1" icon @click="listar(+1)">
 				<v-icon x-large>mdi-chevron-right</v-icon>
 			</v-btn>
@@ -77,7 +79,7 @@ export default {
 			await this.ActionListarTransferenciasPorUsuario({
 				id: this.user.id,
 				size: 5,
-				page: this.page,
+				page: this.page
 			}).finally(() => (this.loadingData = false));
 		}
 	},

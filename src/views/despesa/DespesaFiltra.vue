@@ -31,7 +31,7 @@ export default {
 			"ActionListarPorData",
 			"ActionListarDespesas",
 			"ActionListarPorDescricao",
-			"ActionListarPorMes"
+			"ActionFiltrarPorMes"
 		]),
 
 		input() {
@@ -60,7 +60,7 @@ export default {
 				const patternMes = new RegExp(/\d{2}\/\d{4}/g);
 				if (patternMes.test(this.filtro)) {
 					this.loadingData = true;
-					await this.ActionListarPorMes({
+					await this.ActionFiltrarPorMes({
 						id: this.user.id,
 						mes: this.filtro
 							.split("/")
