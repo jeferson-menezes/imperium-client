@@ -10,6 +10,10 @@ import vuetify from './plugins/vuetify';
 import './shared/helpers/currency'
 import './shared/directives'
 import './shared/filters'
+import './plugins/echarts';
+import './plugins/apexcharts';
+
+
 
 Vue.config.productionTip = false
 
