@@ -5,6 +5,7 @@ import { services as categoria } from '@/views/categoria'
 import { services as despesa } from '@/views/despesa'
 import { services as receita } from '@/views/receita'
 import { services as transferencia } from '@/views/transferencia'
+import { services as historia } from '@/views/historia'
 
 export default {
     home,
@@ -13,5 +14,6 @@ export default {
     categoria,
     despesa,
     receita,
-    transferencia
+    transferencia,
+    historia
 }

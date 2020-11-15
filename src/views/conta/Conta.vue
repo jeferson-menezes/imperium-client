@@ -8,7 +8,7 @@
 						<v-icon x-large color="blue accent-2">mdi-bookmark</v-icon>Lista de contas
 					</v-card-title>
 
-					<v-card>
+					<v-card >
 						<v-card-title primary-title>
 							Contas
 							<v-spacer></v-spacer>
@@ -63,8 +63,13 @@
 		</v-row>
 
 		<v-row>
-			<v-col xs='12' sm='6' md="4">
+			<v-col xs='12' sm='6' md="6">
 				<transferencias></transferencias>
+			</v-col>
+
+			
+			<v-col xs='12' sm='6' md="6">
+				<conta-time-line></conta-time-line>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -75,13 +80,14 @@ import { mapActions, mapState } from "vuex";
 import ContaForm from "./ContaForm";
 import ContaSaldoForm from "./ContaSaldoForm";
 import Transferencias from "../transferencia/Transferencias";
+import ContaTimeLine from "./ContaTimeLine";
 import { Confirm } from "../../shared/models/confirm";
 import { Alert } from "../../shared/models/alert";
 
 export default {
 	name: "Conta",
 
-	components: { ContaForm, ContaSaldoForm, Transferencias },
+	components: { ContaForm, ContaSaldoForm, Transferencias, ContaTimeLine },
 
 	data: () => ({
 		loadingData: false,

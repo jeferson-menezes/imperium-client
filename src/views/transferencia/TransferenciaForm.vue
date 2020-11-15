@@ -26,6 +26,7 @@
 						item-text="nome"
 						label="Conta origem"
 					></v-select>
+					
 					<v-select
 						:rules="rules.conta"
 						v-model="form.contaDestinoId"
@@ -51,6 +52,7 @@ import TimePickers from "../../shared/components/TimePicker";
 import { mapState, mapActions } from "vuex";
 import { required } from "../../shared/rules";
 import { Toast } from "../../shared/models/toast";
+
 export default {
 	name: "TransferenciaForm",
 	components: { DatePickers, TimePickers },
@@ -86,9 +88,11 @@ export default {
 		setHora(payload) {
 			this.form.hora = payload;
 		},
+
 		close() {
 			this.dialog = false;
 		},
+
 		resetForm() {
 			for (const field in this.form) {
 				if (field === "data" || field === "hora") continue;

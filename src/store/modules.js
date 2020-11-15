@@ -5,6 +5,7 @@ import { store as categoria } from '@/views/categoria'
 import { store as despesa } from '@/views/despesa'
 import { store as receita } from '@/views/receita'
 import { store as transferencia } from '@/views/transferencia'
+import { store as historia } from "@/views/historia";
 
 
 export default {
@@ -14,5 +15,6 @@ export default {
     categoria,
     despesa,
     receita,
-    transferencia
+    transferencia,
+    historia
 }

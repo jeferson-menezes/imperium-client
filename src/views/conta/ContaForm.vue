@@ -38,7 +38,7 @@
 			</v-card-text>
 			<v-card-actions>
 				<v-spacer></v-spacer>
-				<v-btn color="blue darken-1" text @click="close()">cancelar</v-btn>
+				<!-- <v-btn color="blue darken-1" text @click="close()">cancelar</v-btn> -->
 				<v-btn :loading="loading" :disabled="!valid" color="blue darken-1" text @click="salvar()">salvar</v-btn>
 			</v-card-actions>
 		</v-card>

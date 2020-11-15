@@ -1,4 +1,4 @@
-import '@mdi/font/css/materialdesignicons.css'
+// import '@mdi/font/css/materialdesignicons.css'
 // import 'sweetalert2/src/sweetalert2.css'
 import './assets/scss/app.scss'
 import Vue from 'vue'
