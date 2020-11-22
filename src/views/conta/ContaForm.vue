@@ -6,13 +6,8 @@
 			</v-card-title>
 			<v-card-text>
 				<v-form ref="form" v-model="valid">
-					<v-text-field
-						v-show="!form.id"
-						v-model="form.saldo"
-						:rules="rules.saldo"
-						label="Saldo"
-						type="text"
-					></v-text-field>
+		
+					<v-currency-field v-show="!form.id" v-model="form.saldo" :rules="rules.saldo" label="Saldo"/>
 
 					<v-text-field v-model="form.nome" :rules="rules.nome" label="Nome"></v-text-field>
 
@@ -38,7 +33,7 @@
 			</v-card-text>
 			<v-card-actions>
 				<v-spacer></v-spacer>
-				<!-- <v-btn color="blue darken-1" text @click="close()">cancelar</v-btn> -->
+				<v-btn color="blue darken-1" text @click="close()">cancelar</v-btn>
 				<v-btn :loading="loading" :disabled="!valid" color="blue darken-1" text @click="salvar()">salvar</v-btn>
 			</v-card-actions>
 		</v-card>
@@ -50,11 +45,16 @@
 import { mapActions, mapState } from "vuex";
 import { required } from "../../shared/rules";
 import { Toast } from "../../shared/models/toast";
-import { moeda, toDolar } from "../../shared/helpers/currency";
+import { moeda } from "../../shared/helpers/currency";
 import { ContaModel } from "./conta.model";
+import VCurrencyField from '../../shared/components/VCurrencyField'
 
 export default {
 	name: "ContaForm",
+
+	components: {
+		VCurrencyField
+	},
 
 	data: () => ({
 		money: moeda,
@@ -106,7 +106,7 @@ export default {
 					descricao,
 					incluiSoma,
 					nome,
-					toDolar(saldo),
+					saldo,
 					tipoContaId,
 					this.user.id
 				);
@@ -122,8 +122,9 @@ export default {
 					"sweet-toast::show",
 					new Toast(message, "success")
 				);
-				this.$refs.form.reset();
-				this.dialog = false;
+
+				this.resetForm()
+
 			} catch (error) {
 				const { err } = error.body;
 
@@ -152,8 +153,19 @@ export default {
 			}
 		},
 
+		resetForm() {
+			this.form.nome = ""
+			this.form.descricao = ""
+			this.form.id = 0
+			this.form.saldo = 0
+			this.form.tipoContaId=  0
+			this.form.usuarioId = 0
+			this.form.incluiSoma = true
+			this.form.ativo = true
+			this.$refs.form.reset()
+		},
+
 		close() {
-			this.$refs.form.reset();
 			this.dialog = false;
 		}
 	},

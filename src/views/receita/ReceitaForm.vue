@@ -6,13 +6,9 @@
 			</v-card-title>
 			<v-card-text>
 				<v-form ref="form" v-model="valid">
-					<v-text-field
-						v-show="!form.id"
-						v-model="form.valor"
-						:rules="rules.valor"
-						label="Valor"
-						type="text"
-					></v-text-field>
+		
+					<v-currency-field v-show="!form.id" v-model="form.valor" :rules="rules.valor" label="Valor"/>
+
 					<v-text-field v-model="form.descricao" :rules="rules.descricao" label="Nome"></v-text-field>
 
 					<v-row>
@@ -65,13 +61,12 @@ import { required } from "../../shared/rules";
 import DatePickers from "../../shared/components/DatePickers";
 import TimePickers from "../../shared/components/TimePicker";
 import { Toast } from "../../shared/models/toast";
-import { parseISO } from "date-fns";
-import { zonedTimeToUtc } from "date-fns-tz";
+import VCurrencyField from '../../shared/components/VCurrencyField'
 
 export default {
 	name: "ReceitaForm",
 
-	components: { DatePickers, TimePickers },
+	components: {VCurrencyField, DatePickers, TimePickers },
 
 	data: () => ({
 		dialog: false,
@@ -80,7 +75,7 @@ export default {
 		timer: 0,
 		form: {
 			id: 0,
-			valor: "",
+			valor: 0,
 			descricao: "",
 			data: "",
 			hora: "",
@@ -155,7 +150,11 @@ export default {
 
 		async salvar() {
 			try {
+
+				this.loading= true
+				
 				let message = "Receita salva com sucesso!";
+				
 				if (this.form.id) {
 					await this.ActionAtualizarReceita(this.form);
 					message = "Receita atualizada com sucesso!";
@@ -165,8 +164,9 @@ export default {
 					"sweet-toast::show",
 					new Toast(message, "success")
 				);
+
 				this.resetForm();
-				this.dialog = false;
+
 			} catch (error) {
 				const err = error.body;
 				if (err.length) {
@@ -179,6 +179,8 @@ export default {
 						"error"
 					)
 				);
+			}finally {
+				this.loading = false
 			}
 		},
 
@@ -201,7 +203,7 @@ export default {
 
 	mounted() {
 		this.ActionListarCategoriasPorNatureza({ natureza: "RECEITA" });
-		// this.ActionListarContasPorUsuario({ id: this.user.id });
+		this.ActionListarContasPorUsuario({ id: this.user.id });
 	},
 
 	created() {

@@ -5,6 +5,8 @@ export default async (to, from, next) => {
     const hasToken = store.getters['auth/hasToken']
     const toLogin = (to.name === 'login')
 
+    // console.log(toLogin, hasToken);
+
     if (!toLogin && !hasToken) {
         try {
             await store.dispatch('auth/ActionChecaToken')

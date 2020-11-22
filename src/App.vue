@@ -5,6 +5,7 @@
 		<sweet-confirm></sweet-confirm>
 		<sweet-alert></sweet-alert>
 		<notification></notification>
+
 		<v-navigation-drawer v-show="isLogged()" app v-model="drawer">
 			<v-list>
 				<v-list-item v-for="(item, index) in routerLinks" :key="index" :to="item.path">
@@ -26,13 +27,14 @@
 			<v-toolbar-title>Imperium</v-toolbar-title>
 			<loading-progress></loading-progress>
 			<v-spacer></v-spacer>
-			<v-btn fab small color="green accent-3" elevation="0">
+			<!-- <v-btn fab small color="green accent-3" elevation="0">
 				<v-icon medium color="white">mdi-account-circle</v-icon>
-			</v-btn>
+			</v-btn> -->
+			<Logout/>
 		</v-app-bar>
 
 		<v-main style="background:#FAFAFA">
-			<v-container fluid>
+			<v-container>
 				<router-view></router-view>
 			</v-container>
 		</v-main>
@@ -49,6 +51,7 @@ import SweetAlert from "./shared/components/SweetAlert";
 import LoadingProgress from "./shared/components/LoadingProgress";
 import LoadingOverlay from "./shared/components/LoadingOverlay";
 import Notification from "./shared/components/Notifications";
+import Logout from './core/auth/Logout'
 
 export default {
 	name: "App",
@@ -59,11 +62,12 @@ export default {
 		SweetAlert,
 		LoadingProgress,
 		LoadingOverlay,
-		Notification
+		Notification,
+		Logout
 	},
 
 	data: () => ({
-		drawer: true
+		drawer: false
 	}),
 
 	methods: {

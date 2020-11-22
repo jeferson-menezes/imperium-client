@@ -10,7 +10,7 @@
 				<v-card-subtitle>{{despesa.contaNome}}</v-card-subtitle>
 				<v-card-text>
 					<v-form ref="form" v-model="valid">
-						<v-text-field v-model="despesa.valor" :rules="rules.valor" label="Valor" type="text"></v-text-field>
+						<v-currency-field v-model="despesa.valor" :rules="rules.valor" label="Valor"/>
 					</v-form>
 				</v-card-text>
 				<v-card-actions>
@@ -33,9 +33,14 @@
 import { mapActions, mapState } from "vuex";
 import { required } from "../../shared/rules";
 import { Toast } from "../../shared/models/toast";
+import VCurrencyField from '../../shared/components/VCurrencyField'
 
 export default {
 	name: "DespesaAlteraValor",
+
+	components: {
+		VCurrencyField
+	},
 
 	props: {
 		despesa: Object

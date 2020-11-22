@@ -6,7 +6,9 @@
 			</v-card-title>
 			<v-card-text>
 				<v-form ref="form" v-model="valid">
-					<v-text-field v-model="form.valor" :rules="rules.valor" label="Valor" type="text"></v-text-field>
+
+					<v-currency-field v-model="form.valor" :rules="rules.valor" label="Valor"/>
+
 					<v-text-field v-model="form.descricao" :rules="rules.descricao" label="Descrição"></v-text-field>
 
 					<v-row>
@@ -52,10 +54,13 @@ import TimePickers from "../../shared/components/TimePicker";
 import { mapState, mapActions } from "vuex";
 import { required } from "../../shared/rules";
 import { Toast } from "../../shared/models/toast";
+import VCurrencyField from '../../shared/components/VCurrencyField'
+
 
 export default {
 	name: "TransferenciaForm",
-	components: { DatePickers, TimePickers },
+
+	components: { VCurrencyField, DatePickers, TimePickers },
 
 	data: () => ({
 		dialog: false,

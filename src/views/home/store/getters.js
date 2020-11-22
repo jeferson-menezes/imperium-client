@@ -1,3 +1,4 @@
+// home
 export const somaDespesasMes = ({ despesasMes }) => despesasMes.reduce((t, v) => t + v.valor, 0);
 export const totalDespesasMes = ({ despesasMes }) => despesasMes.length;
 export const valoresDespesasMes = ({ despesasMes }) => despesasMes.map(e => e.valor)
@@ -76,7 +77,6 @@ export const agruparDespesasCategorias = ({ despesasMes }) => {
         return acc;
     }, {})
     let lista = []
-    console.log(grupos);
     for (const i in grupos) {
         lista.push({
             categoria: i,

@@ -119,6 +119,10 @@ import DonutChartCategorias from "./charts/DonutChartCategorias";
 export default {
 	name: "Home",
 
+	data: () => ({
+		mes : new Date().toISOString().substr(0, 7)
+	}),
+
 	components: {
 		BarChartCategorias,
 		LinesChartReceitaDespesa,
@@ -153,12 +157,12 @@ export default {
 	created() {
 		this.ActionListarDespesasPorMes({
 			id: this.user.id,
-			mes: new Date().toISOString().substr(0, 7),
+			mes: this.mes,
 		});
 
 		this.ActionListarReceitasPorMes({
 			id: this.user.id,
-			mes: new Date().toISOString().substr(0, 7),
+			mes: this.mes,
 		});
 	},
 };

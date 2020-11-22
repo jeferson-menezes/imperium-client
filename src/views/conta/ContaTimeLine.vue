@@ -1,8 +1,14 @@
 <template>
   <v-card class="mt-5">
-    <v-card-title> Timeline </v-card-title>
-    <v-card-text>
-      <v-timeline align-top dense>
+    <v-card-title>
+      Atividades
+      <v-spacer></v-spacer>
+      <v-icon x-large color="purple accent-2">mdi-timeline</v-icon>
+    </v-card-title>
+
+    <v-card-text style="height: 450px;
+    overflow-y: auto;">
+      <v-timeline dense>
         <v-timeline-item
           :color="cor(item.natureza)"
           small
@@ -22,10 +28,15 @@
       </v-timeline>
     </v-card-text>
 
-    <v-card-actions>
-      <v-btn @click="listar()">
-        <v-icon x-large>mdi-chevron-right</v-icon>
-      </v-btn>
+    <v-card-actions >
+    <v-row
+    align="center"
+    justify="space-around"
+  >
+        <v-btn  text :disabled="temMais()" @click="listar()">
+          carregar mais
+        </v-btn>
+    </v-row>
     </v-card-actions>
   </v-card>
 </template>
@@ -68,6 +79,14 @@ export default {
       } catch (error) {
       } finally {
         this.loadingData = false;
+      }
+    },
+
+    temMais() {
+      if (this.historias.content) {
+        return this.historias.content.length === this.historias.totalElements;
+      } else {
+        return true;
       }
     },
   },

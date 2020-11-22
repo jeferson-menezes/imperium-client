@@ -1,9 +1,39 @@
 <template>
 	<v-container fluid>
-		<v-row></v-row>
+		<v-row>
+			<v-col>
+				<v-sheet
+					rounded="rounded"
+					class="d-flex pa-5"
+					color="blue darken-2"
+					width="100%"
+					>
+					<v-container>	 
+						<v-row>
+							<v-col>
+								<span class="title white--text">Soma de saldos</span>
+							</v-col>
+						</v-row>
+						<v-row>
+							<v-col>
+								<span class="subtitle-1 white--text">Incluidas nas somas</span> <br>
+								<span class="display-1 white--text">{{$toReal(totalIncluidasSoma())}}</span><br>
+							</v-col>
+						</v-row>
+						<v-row>
+							<v-col>
+								<span class="title light-blue--text text--lighten-4">{{$toReal(totalRestantes())}}</span><br>
+								<span class="blue--text light-blue--text text--darken-1"> Soma das demais contas</span>
+							</v-col>
+						</v-row>
+					</v-container>
+				</v-sheet>
+			</v-col>
+		</v-row>
 		<v-row>
 			<v-col>
 				<v-card class="pa-sm-3 pa-md-7 pa-xs-0">
+
 					<v-card-title class="pr-0">
 						<v-icon x-large color="blue accent-2">mdi-bookmark</v-icon>Lista de contas
 					</v-card-title>
@@ -76,7 +106,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, mapGetters } from "vuex";
 import ContaForm from "./ContaForm";
 import ContaSaldoForm from "./ContaSaldoForm";
 import Transferencias from "../transferencia/Transferencias";
@@ -104,7 +134,7 @@ export default {
 
 	computed: {
 		...mapState("auth", ["user"]),
-		...mapState("conta", ["contas"])
+		...mapState("conta", ["contas"]),
 	},
 
 	methods: {
@@ -113,6 +143,8 @@ export default {
 			"ActionExcluirConta",
 			"ActionInativarConta"
 		]),
+
+		...mapGetters("conta", ["totalIncluidasSoma","totalRestantes"]), 
 
 		inativaConta(conta) {
 			const message = conta.ativo ? "inativar" : "ativar";
@@ -150,7 +182,7 @@ export default {
 					}
 				}
 			});
-		}
+		},
 	},
 
 	mounted() {

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-icon @click="dialog = true">mdi-currency-usd</v-icon>
+		<v-icon @click="show()">mdi-currency-usd</v-icon>
 
 		<v-dialog v-model="dialog" persistent max-width="250px">
 			<v-card>
@@ -10,7 +10,8 @@
 				<v-card-subtitle>{{conta.nome}}</v-card-subtitle>
 				<v-card-text>
 					<v-form ref="form" v-model="valid">
-						<v-text-field v-model="conta.saldo" :rules="rules.saldo" label="Saldo" type="text"></v-text-field>
+					<v-currency-field v-model="conta.saldo" label="Saldo" :rules="rules.saldo" />
+							
 					</v-form>
 				</v-card-text>
 				<v-card-actions>
@@ -33,9 +34,14 @@
 import { mapActions } from "vuex";
 import { required } from "../../shared/rules";
 import { Toast } from "../../shared/models/toast";
+import VCurrencyField from '../../shared/components/VCurrencyField';
 
 export default {
 	name: "ContaSaldoForm",
+
+	components:{
+		VCurrencyField
+	},
 
 	props: {
 		conta: Object
@@ -45,22 +51,34 @@ export default {
 		dialog: false,
 		valid: false,
 		loading: false,
+
 		rules: {
 			saldo: [required("O salvo é obrigatório")]
 		}
 	}),
 
 	methods: {
+		
 		...mapActions("conta", ["ActionAlterarSaldo"]),
+		
+		show(){
+			this.dialog = true
+		},
 
 		async salvar() {
 			try {
+				
+				this.loading = true
+
 				const { id, saldo } = this.conta;
+				
 				await this.ActionAlterarSaldo({ id, saldo });
+				
 				this.$root.$emit(
 					"sweet-toast::show",
 					new Toast("Saldo alterado com sucesso!", "success")
 				);
+				
 				this.dialog = false;
 			} catch (error) {
 				this.$root.$emit(
@@ -70,6 +88,8 @@ export default {
 						"error"
 					)
 				);
+			} finally {
+				this.loading = false
 			}
 		},
 		close() {

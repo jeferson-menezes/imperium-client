@@ -40,6 +40,7 @@
 import { mapActions, mapState } from "vuex";
 import { required } from "../../shared/rules";
 import { Toast } from "../../shared/models/toast";
+
 export default {
 	name: "ReceitaAlteraConta",
 
