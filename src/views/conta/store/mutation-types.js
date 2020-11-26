@@ -1,3 +1,4 @@
+// conta
 export const SET_CONTAS = 'CONTA/SET_CONTAS'
 export const SET_TIPOS_CONTAS = 'CONTA/SET_TIPOS_CONTAS'
 export const ADD_CONTA = 'CONTA/ADD_CONTA'

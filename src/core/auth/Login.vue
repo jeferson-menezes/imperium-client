@@ -46,6 +46,7 @@
 <script>
 import { mapActions } from "vuex";
 import { required, email } from "../../shared/rules";
+import { Toast } from "../../shared/models/toast"
 
 export default {
 	name: "Login",
@@ -77,6 +78,17 @@ export default {
 				this.$router.push({ name: "home" });
 			} catch (error) {
 				console.error(error);
+				const err = error.body;
+				if (err.length) {
+					err.forEach(e => this.$root.$emit("notification::show", e));
+				}
+				this.$root.$emit(
+					"sweet-toast::show",
+					new Toast(
+						"Usuário ou senha inválido!",
+						"error"
+					)
+				);
 			} finally {
 				this.loading = false;
 			}

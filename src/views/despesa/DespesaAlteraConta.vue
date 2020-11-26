@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-icon @click="dialog = true">mdi-bank-transfer</v-icon>
+		<v-icon @click="showDialog()">mdi-bank-transfer</v-icon>
 
 		<v-dialog v-model="dialog" persistent max-width="350px">
 			<v-card>
@@ -86,6 +86,11 @@ export default {
 
 		close() {
 			this.dialog = false;
+		},
+
+		showDialog() {
+			this.ActionListarContasPorUsuario({ id: this.user.id });
+			this.dialog = true
 		}
 	},
 
@@ -94,8 +99,5 @@ export default {
 		...mapState("auth", ["user"])
 	},
 
-	mounted() {
-		this.ActionListarContasPorUsuario({ id: this.user.id });
-	}
 };
 </script>

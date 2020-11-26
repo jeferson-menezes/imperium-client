@@ -9,7 +9,17 @@
 					</v-card-title>
 					<v-card>
 						<v-card-title primary-title>
-							<despesa-filtra :page="page"></despesa-filtra>
+
+							<v-text-field
+								@input="input"
+								v-model="filtro"
+								append-icon="mdi-magnify"
+								:loading="loadingData"
+								rounded
+								dense
+								filled
+							></v-text-field>
+
 							<v-spacer></v-spacer>
 							<despesa-form></despesa-form>
 							<v-btn fab small elevation="0" v-on:click="$root.$emit('despesa-form::show','')">
@@ -72,10 +82,10 @@ import { mapActions, mapState } from "vuex";
 import DespesaForm from "./DespesaForm";
 import DespesaAlteraConta from "./DespesaAlteraConta";
 import DespesaAlteraValor from "./DespesaAlteraValor";
-import DespesaFiltra from "./DespesaFiltra";
+
 import { Confirm } from "../../shared/models/confirm";
 import { Alert } from "../../shared/models/alert";
-import { parseISO } from "date-fns";
+import { Pageable } from "../../shared/models/pageable";
 
 export default {
 	name: "Despesa",
@@ -84,7 +94,6 @@ export default {
 		DespesaForm,
 		DespesaAlteraConta,
 		DespesaAlteraValor,
-		DespesaFiltra
 	},
 
 	data: () => ({
@@ -100,6 +109,9 @@ export default {
 			{ text: "Ações", sortable: false, value: "acoes", align: "center" }
 		],
 		page: 1,
+		size: 10,
+		filtro: "",
+		timer:  0,
 		paginaAtual: ""
 	}),
 
@@ -112,16 +124,63 @@ export default {
 		...mapActions("despesa", [
 			"ActionListarDespesas",
 			"ActionFinalizarDespesa",
-			"ActionExcluirDespesa"
+			"ActionExcluirDespesa",
+			"ActionListarPorDescricao",
+			"ActionListarPorData",
+			"ActionFiltrarPorMes"
 		]),
 
 		listar() {
-			this.loadingData = true;
-			this.ActionListarDespesas({
-				page: this.page - 1,
-				size: 10,
-				id: this.user.id
-			}).finally(() => (this.loadingData = false));
+			if (this.filtro) {
+				this.filtrar()
+			} else {
+				this.loadingData = true;
+				const pageable = new Pageable(this.page, this.size)
+				pageable.id = this.user.id
+				this.ActionListarDespesas(pageable)
+					.finally(() => (this.loadingData = false));
+			}
+		},
+
+		input(){
+			if (this.timer) clearTimeout(this.timer);
+			this.timer = setTimeout(() => {
+				this.page = 1
+				if (this.filtro) this.filtrar();
+				else this.listar()
+			}, 600);
+		},
+
+		filtrar(){
+				const pageable = new Pageable(this.page, this.size)
+				pageable.id = this.user.id
+
+				const patternData = new RegExp(/\d{2}\/\d{2}\/\d{4}/g);
+				const patternMes = new RegExp(/\d{2}\/\d{4}/g);
+
+				if (Number(this.filtro.substr(0, 2))) {
+
+					if (this.filtro.length === 10 && patternData.test(this.filtro)) {
+						this.loadingData = true;
+						pageable.data = this.filtro.split("/").reverse().join("-")
+						this.ActionListarPorData(pageable)
+							.finally(() => (this.loadingData = false));
+					}
+					
+					if (this.filtro.length === 7 && patternMes.test(this.filtro)) {
+						this.loadingData = true;
+						pageable.mes = this.filtro.split("/").reverse().join("-")
+						this.ActionFiltrarPorMes(pageable)
+							.finally(() => (this.loadingData = false));
+					} 
+
+				} else {
+					this.loadingData = true;
+					pageable.descricao = this.filtro;
+					this.ActionListarPorDescricao(pageable)
+						.finally(() => (this.loadingData = false));
+				}
+				
 		},
 
 		pagarDespesa(despesa) {

@@ -17,7 +17,6 @@ export const totalRestantes = ({ contas }) => {
     let total = currency("0.0")
     for (let i = 0; i < contas.length; i++) {
         if (contas[i].incluiSoma) continue;
-        console.log(contas[i]);
         total = total.add(contas[i].saldo)
     }
     return total

@@ -93,12 +93,12 @@
 		</v-row>
 
 		<v-row>
-			<v-col xs='12' sm='6' md="6">
+			<v-col cols="12" xs='12' sm='12' md="6">
 				<transferencias></transferencias>
 			</v-col>
 
 			
-			<v-col xs='12' sm='6' md="6">
+			<v-col cols="12" xs='12' sm='12' md="6">
 				<conta-time-line></conta-time-line>
 			</v-col>
 		</v-row>

@@ -9,7 +9,17 @@
 					</v-card-title>
 					<v-card>
 						<v-card-title primary-title>
-							<receita-filtra :page="page"></receita-filtra>
+
+							<v-text-field
+								@input="input"
+								v-model="filtro"
+								append-icon="mdi-magnify"
+								:loading="loadingData"
+								rounded
+								dense
+								filled
+							></v-text-field>
+
 							<v-spacer></v-spacer>
 							<receita-form></receita-form>
 							<v-btn fab small elevation="0" v-on:click="$root.$emit('receita-form::show','')">
@@ -71,19 +81,21 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import { Confirm } from "../../shared/models/confirm";
-import ReceitaForm from "./ReceitaForm";
 import ReceitaAlteraConta from "./ReceitaAlteraConta";
 import ReceitaAlteraValor from "./ReceitaAlteraValor";
-import ReceitaFiltra from './ReceitaFiltra'
+import ReceitaForm from "./ReceitaForm";
+
+import { Confirm } from "../../shared/models/confirm";
+import { Alert } from "../../shared/models/alert";
+import { Pageable } from "../../shared/models/pageable";
+
 export default {
 	name: "Receita",
 
 	components: {
 		ReceitaForm,
         ReceitaAlteraConta,
-        ReceitaAlteraValor,
-        ReceitaFiltra
+        ReceitaAlteraValor
 	},
 	data: () => ({
 		loadingData: false,
@@ -98,6 +110,9 @@ export default {
 			{ text: "Ações", sortable: false, value: "acoes", align: "center" }
 		],
 		page: 1,
+		size: 10,
+		filtro: "",
+		timer:  0,
 		paginaAtual: ""
 	}),
 
@@ -110,16 +125,63 @@ export default {
 		...mapActions("receita", [
 			"ActionListarReceitas",
 			"ActionFinalizarReceita",
-			"ActionExcluirReceita"
+			"ActionExcluirReceita",
+			"ActionListarPorData",
+			"ActionListarPorDescricao",
+			"ActionListarPorMes"
 		]),
 
 		listar() {
-			this.loadingData = true;
-			this.ActionListarReceitas({
-				page: this.page - 1,
-				size: 10,
-				id: this.user.id
-			}).finally(() => (this.loadingData = false));
+			if (this.filtro) {
+				this.filtrar()
+			} else {
+				this.loadingData = true;
+				const pageable = new Pageable(this.page, this.size)
+				pageable.id = this.user.id
+				this.ActionListarReceitas(pageable)
+					.finally(() => (this.loadingData = false));
+			}
+		},
+
+		input() {
+			if (this.timer) clearTimeout(this.timer);
+			this.timer = setTimeout(() => {
+				this.page = 1
+				if (this.filtro) this.filtrar();
+				else this.listar()
+			}, 600);
+		},
+
+		filtrar() {
+			const pageable = new Pageable(this.page, this.size)
+			pageable.id = this.user.id
+
+			const patternData = new RegExp(/\d{2}\/\d{2}\/\d{4}/g);
+			const patternMes = new RegExp(/\d{2}\/\d{4}/g);
+
+			if (Number(this.filtro.substr(0, 2))) {
+
+				if (this.filtro.length === 10 && patternData.test(this.filtro)) {
+					this.loadingData = true;
+					pageable.data = this.filtro.split("/").reverse().join("-")
+					this.ActionListarPorData(pageable)
+						.finally(() => (this.loadingData = false));
+				}
+				
+				if (this.filtro.length === 7 && patternMes.test(this.filtro)) {
+					this.loadingData = true;
+					pageable.mes = this.filtro.split("/").reverse().join("-")
+					this.ActionListarPorMes(pageable)
+						.finally(() => (this.loadingData = false));
+				} 
+
+			} else {
+				this.loadingData = true;
+				pageable.descricao = this.filtro;
+				this.ActionListarPorDescricao(pageable)
+					.finally(() => (this.loadingData = false));
+			}
+
 		},
 
 		receberReceita(receita) {

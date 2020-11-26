@@ -1,2 +1,2 @@
-export const server = 'http://localhost:8081/'
-export const icons = 'http://localhost:8082/'
+export const server = process.env.NODE_ENV === 'production' ? 'http://192.168.15.100:8081/' : 'http://localhost:8081/'
+export const icons = process.env.NODE_ENV === 'production' ? 'http://192.168.15.100:8082/' :'http://localhost:8082/'
