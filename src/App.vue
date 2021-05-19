@@ -39,7 +39,11 @@
 			</v-container>
 		</v-main>
 
-		<v-footer v-show="isLogged()" app>Jeferson Menezes 2020</v-footer>
+		<v-footer v-show="isLogged()" app class="mt-3">
+		 	<v-row align="center" justify="space-around">
+				Jeferson Menezes 2020
+			</v-row>
+		</v-footer>
 	</v-app>
 </template>
 
