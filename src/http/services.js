@@ -6,6 +6,8 @@ import { services as despesa } from '@/views/despesa'
 import { services as receita } from '@/views/receita'
 import { services as transferencia } from '@/views/transferencia'
 import { services as historia } from '@/views/historia'
+import { services as cartao } from '@/views/cartao'
+import { services as fatura } from '@/views/fatura'
 
 export default {
     home,
@@ -15,5 +17,7 @@ export default {
     despesa,
     receita,
     transferencia,
-    historia
+    historia,
+    cartao,
+    fatura
 }

@@ -19,7 +19,6 @@ export const receitasGraficoLinha = ({ receitasMes }) => {
     return receitasMes.map(e => {
         return { x: e.data, y: e.valor }
     })
-
 }
 
 export const agruparDespesasMes = ({ despesasMes }) => {

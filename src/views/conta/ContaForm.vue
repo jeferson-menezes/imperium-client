@@ -2,16 +2,30 @@
 	<v-dialog v-model="dialog" persistent max-width="330px">
 		<v-card>
 			<v-card-title>
-				<span class="headline">{{form.id ? 'Atualizar':'Adicionar'}} Conta</span>
+				<span class="headline"
+					>{{ form.id ? "Atualizar" : "Adicionar" }} Conta</span
+				>
 			</v-card-title>
 			<v-card-text>
 				<v-form ref="form" v-model="valid">
-		
-					<v-currency-field v-show="!form.id" v-model="form.saldo" :rules="rules.saldo" label="Saldo"/>
+					<v-currency-field
+						v-show="!form.id"
+						v-model="form.saldo"
+						:rules="rules.saldo"
+						label="Saldo"
+					/>
 
-					<v-text-field v-model="form.nome" :rules="rules.nome" label="Nome"></v-text-field>
+					<v-text-field
+						v-model="form.nome"
+						:rules="rules.nome"
+						label="Nome"
+					></v-text-field>
 
-					<v-text-field v-model="form.descricao" :rules="rules.descricao" label="Descrição"></v-text-field>
+					<v-text-field
+						v-model="form.descricao"
+						:rules="rules.descricao"
+						label="Descrição"
+					></v-text-field>
 
 					<v-select
 						v-model="form.tipoContaId"
@@ -24,17 +38,33 @@
 					<v-row justify="space-around">
 						<v-switch
 							v-model="form.incluiSoma"
-							:label=" form.incluiSoma ?'Incluir as somas' :'Não incluir as somas'"
+							:label="
+								form.incluiSoma
+									? 'Incluir as somas'
+									: 'Não incluir as somas'
+							"
 						></v-switch>
 
-						<v-switch v-model="form.ativo" :label=" form.ativo ?'Ativo' :'Inativo'"></v-switch>
+						<v-switch
+							v-model="form.ativo"
+							:label="form.ativo ? 'Ativo' : 'Inativo'"
+						></v-switch>
 					</v-row>
 				</v-form>
 			</v-card-text>
 			<v-card-actions>
 				<v-spacer></v-spacer>
-				<v-btn color="blue darken-1" text @click="close()">cancelar</v-btn>
-				<v-btn :loading="loading" :disabled="!valid" color="blue darken-1" text @click="salvar()">salvar</v-btn>
+				<v-btn color="blue darken-1" text @click="close()"
+					>cancelar</v-btn
+				>
+				<v-btn
+					:loading="loading"
+					:disabled="!valid"
+					color="blue darken-1"
+					text
+					@click="salvar()"
+					>salvar</v-btn
+				>
 			</v-card-actions>
 		</v-card>
 	</v-dialog>
@@ -45,19 +75,17 @@
 import { mapActions, mapState } from "vuex";
 import { required } from "../../shared/rules";
 import { Toast } from "../../shared/models/toast";
-import { moeda } from "../../shared/helpers/currency";
 import { ContaModel } from "./conta.model";
-import VCurrencyField from '../../shared/components/VCurrencyField'
+import VCurrencyField from "../../shared/components/VCurrencyField";
 
 export default {
 	name: "ContaForm",
 
 	components: {
-		VCurrencyField
+		VCurrencyField,
 	},
 
 	data: () => ({
-		money: moeda,
 		dialog: false,
 		valid: false,
 		loading: false,
@@ -69,13 +97,13 @@ export default {
 			incluiSoma: true,
 			tipoContaId: 0,
 			usuarioId: 0,
-			ativo: true
+			ativo: true,
 		},
 		rules: {
 			saldo: [required("O salvo é obrigatório")],
 			nome: [required("O Nome é obrigatório")],
-			descricao: [required("A descrição é obrigatória")]
-		}
+			descricao: [required("A descrição é obrigatória")],
+		},
 	}),
 
 	methods: {
@@ -83,7 +111,7 @@ export default {
 			"ActionListarTipoContas",
 			"ActionAdicionarConta",
 			"ActionDetalharConta",
-			"ActionAtualizarConta"
+			"ActionAtualizarConta",
 		]),
 
 		async salvar() {
@@ -97,7 +125,7 @@ export default {
 					descricao,
 					incluiSoma,
 					tipoContaId,
-					usuarioId
+					usuarioId,
 				} = this.form;
 
 				const conta = new ContaModel(
@@ -123,8 +151,9 @@ export default {
 					new Toast(message, "success")
 				);
 
-				this.resetForm()
-
+				if (this.form.id) this.close();
+				
+				this.resetForm();
 			} catch (error) {
 				const { err } = error.body;
 
@@ -143,7 +172,7 @@ export default {
 		async populaForm(payload) {
 			try {
 				const conta = await this.ActionDetalharConta({ id: payload });
-				Object.keys(conta.data).forEach(e => {
+				Object.keys(conta.data).forEach((e) => {
 					if (e === "tipo")
 						this.form.tipoContaId = conta.data.tipo.id;
 					else this.form[e] = conta.data[e];
@@ -154,25 +183,25 @@ export default {
 		},
 
 		resetForm() {
-			this.form.nome = ""
-			this.form.descricao = ""
-			this.form.id = 0
-			this.form.saldo = 0
-			this.form.tipoContaId=  0
-			this.form.usuarioId = 0
-			this.form.incluiSoma = true
-			this.form.ativo = true
-			this.$refs.form.reset()
+			this.form.nome = "";
+			this.form.descricao = "";
+			this.form.id = 0;
+			this.form.saldo = 0;
+			this.form.tipoContaId = 0;
+			this.form.usuarioId = 0;
+			this.form.incluiSoma = true;
+			this.form.ativo = true;
+			this.$refs.form.reset();
 		},
 
 		close() {
 			this.dialog = false;
-		}
+		},
 	},
 
 	computed: {
 		...mapState("conta", ["tiposConta"]),
-		...mapState("auth", ["user"])
+		...mapState("auth", ["user"]),
 	},
 
 	mounted() {
@@ -180,12 +209,12 @@ export default {
 	},
 
 	created() {
-		this.$root.$on("conta-form::show", payload => {
+		this.$root.$on("conta-form::show", (payload) => {
 			if (payload) {
 				this.populaForm(payload);
 			}
 			this.dialog = true;
 		});
-	}
+	},
 };
 </script>

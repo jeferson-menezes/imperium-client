@@ -12,13 +12,30 @@
 					<v-form ref="form" v-model="valid">
 						<v-row>
 							<v-col cols="12">
-								<v-radio-group v-model="form.natureza" :rules="rules.natureza" row>
-									<v-radio label="Despesa" color="red" value="DESPESA"></v-radio>
-									<v-radio label="Receita" color="success" value="RECEITA"></v-radio>
+								<v-radio-group
+									v-model="form.natureza"
+									:rules="rules.natureza"
+									row
+								>
+									<v-radio
+										label="Despesa"
+										color="red"
+										value="DESPESA"
+									></v-radio>
+									<v-radio
+										label="Receita"
+										color="success"
+										value="RECEITA"
+									></v-radio>
 								</v-radio-group>
 							</v-col>
 							<v-col cols="12">
-								<v-text-field v-model="form.nome" :rules="rules.nome" label="Nome" type="text"></v-text-field>
+								<v-text-field
+									v-model="form.nome"
+									:rules="rules.nome"
+									label="Nome"
+									type="text"
+								></v-text-field>
 							</v-col>
 							<v-col cols="12">
 								<v-text-field
@@ -37,8 +54,13 @@
 												text
 												small
 												color="primary"
-												@click="$root.$emit('icon-pickers::show')"
-											>icone</v-btn>
+												@click="
+													$root.$emit(
+														'icon-pickers::show'
+													)
+												"
+												>icone</v-btn
+											>
 										</v-col>
 										<v-col class="pl-0 pr-0">
 											<v-btn
@@ -46,31 +68,46 @@
 												text
 												small
 												color="primary"
-												@click="$root.$emit('cor-pickers::show')"
-											>cor</v-btn>
+												@click="
+													$root.$emit(
+														'cor-pickers::show'
+													)
+												"
+												>cor</v-btn
+											>
 										</v-col>
 										<v-col class="pl-0 pr-0">
-											<v-icon class="pa-0 ma-0" :color="form.cor">mdi-{{form.icone}}</v-icon>
+											<v-icon
+												class="pa-0 ma-0"
+												:color="form.cor"
+												>mdi-{{ form.icone }}</v-icon
+											>
 										</v-col>
 									</v-row>
 								</v-container>
 							</v-col>
 							<v-col cols="4">
-								<v-switch v-model="form.ativo" :label=" form.ativo ?'Ativo' :'Inativo'"></v-switch>
+								<v-switch
+									v-model="form.ativo"
+									:label="form.ativo ? 'Ativo' : 'Inativo'"
+								></v-switch>
 							</v-col>
 						</v-row>
 					</v-form>
 				</v-card-text>
 				<v-card-actions>
 					<v-spacer></v-spacer>
-					<v-btn color="blue darken-1" text @click="dialog = false">cancelar</v-btn>
+					<v-btn color="blue darken-1" text @click="dialog = false"
+						>cancelar</v-btn
+					>
 					<v-btn
 						:loading="loading"
 						:disabled="!valid"
 						color="blue darken-1"
 						text
 						@click="salvar()"
-					>salvar</v-btn>
+						>salvar</v-btn
+					>
 				</v-card-actions>
 			</v-card>
 		</v-dialog>
@@ -100,20 +137,20 @@ export default {
 			natureza: "DESPESA",
 			ativo: true,
 			icone: "",
-			cor: ""
+			cor: "",
 		},
 		rules: {
-            natureza: [required('A natureza é obrigatória')],
+			natureza: [required("A natureza é obrigatória")],
 			nome: [required("O nome é obrigatório")],
 			descricao: [required("A descrição é obrigatória")],
-			natureza: [required("A natureza é obrigatória")]
-		}
+			natureza: [required("A natureza é obrigatória")],
+		},
 	}),
 
 	methods: {
 		...mapActions("categoria", [
 			"ActionAdicionarCategoria",
-			"ActionAtualizarCategoria"
+			"ActionAtualizarCategoria",
 		]),
 
 		iconeSelecionado(payload) {
@@ -144,6 +181,9 @@ export default {
 					"sweet-toast::show",
 					new Toast(message, "success")
 				);
+
+				if (this.form.id) this.close();
+				
 				this.$refs.form.reset();
 				this.dialog = false;
 			} catch (error) {
@@ -161,20 +201,20 @@ export default {
 		},
 
 		populaForm(payload) {
-			Object.keys(payload).forEach(e => {
+			Object.keys(payload).forEach((e) => {
 				this.form[e] = payload[e];
 			});
-		}
+		},
 	},
 
 	created() {
-		this.$root.$on("categoria-form::show", payload => {
+		this.$root.$on("categoria-form::show", (payload) => {
 			if (payload) {
 				this.populaForm(payload);
 			}
 
 			this.dialog = true;
 		});
-	}
+	},
 };
 </script>

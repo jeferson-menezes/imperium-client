@@ -6,17 +6,24 @@
 			</v-card-title>
 			<v-card-text>
 				<v-form ref="form" v-model="valid">
+					<v-currency-field
+						v-model="form.valor"
+						:rules="rules.valor"
+						label="Valor"
+					/>
 
-					<v-currency-field v-model="form.valor" :rules="rules.valor" label="Valor"/>
-
-					<v-text-field v-model="form.descricao" :rules="rules.descricao" label="Descrição"></v-text-field>
+					<v-text-field
+						v-model="form.descricao"
+						:rules="rules.descricao"
+						label="Descrição"
+					></v-text-field>
 
 					<v-row>
 						<v-col>
-							<date-pickers :data="form.data" @data-selecionada="setData"></date-pickers>
+							<date-picker v-model="form.data"></date-picker>
 						</v-col>
 						<v-col>
-							<time-pickers @hora-selecionada="setHora"></time-pickers>
+							<time-pickers v-model="form.hora"></time-pickers>
 						</v-col>
 					</v-row>
 
@@ -28,7 +35,7 @@
 						item-text="nome"
 						label="Conta origem"
 					></v-select>
-					
+
 					<v-select
 						:rules="rules.conta"
 						v-model="form.contaDestinoId"
@@ -41,26 +48,34 @@
 			</v-card-text>
 			<v-card-actions>
 				<v-spacer></v-spacer>
-				<v-btn color="blue darken-1" text @click="close()">cancelar</v-btn>
-				<v-btn :loading="loading" :disabled="!valid" color="blue darken-1" text @click="salvar()">salvar</v-btn>
+				<v-btn color="blue darken-1" text @click="close()"
+					>cancelar</v-btn
+				>
+				<v-btn
+					:loading="loading"
+					:disabled="!valid"
+					color="blue darken-1"
+					text
+					@click="salvar()"
+					>salvar</v-btn
+				>
 			</v-card-actions>
 		</v-card>
 	</v-dialog>
 </template>
 
 <script>
-import DatePickers from "../../shared/components/DatePickers";
+import DatePicker from "../../shared/components/DatePicker";
 import TimePickers from "../../shared/components/TimePicker";
 import { mapState, mapActions } from "vuex";
 import { required } from "../../shared/rules";
 import { Toast } from "../../shared/models/toast";
-import VCurrencyField from '../../shared/components/VCurrencyField'
-
+import VCurrencyField from "../../shared/components/VCurrencyField";
 
 export default {
 	name: "TransferenciaForm",
 
-	components: { VCurrencyField, DatePickers, TimePickers },
+	components: { VCurrencyField, DatePicker, TimePickers },
 
 	data: () => ({
 		dialog: false,
@@ -68,31 +83,23 @@ export default {
 		loading: false,
 		timer: 0,
 		form: {
-			valor: "",
+			valor: 0,
 			descricao: "",
 			data: "",
 			hora: "",
 			contaOrigemId: 0,
-			contaDestinoId: 0
+			contaDestinoId: 0,
 		},
 		rules: {
 			valor: [required("O valor é obrigatório!")],
 			descricao: [required("Adescrição é obrigatória!")],
-			conta: [required("A Conta é obrigatória")]
-		}
+			conta: [required("A Conta é obrigatória")],
+		},
 	}),
 
 	methods: {
 		...mapActions("transferencia", ["ActionAdicionarTransferencia"]),
 		...mapActions("conta", ["ActionListarContasPorUsuario"]),
-
-		setData(payload) {
-			this.form.data = payload;
-		},
-
-		setHora(payload) {
-			this.form.hora = payload;
-		},
 
 		close() {
 			this.dialog = false;
@@ -127,12 +134,13 @@ export default {
 				// this.resetForm();
 				this.dialog = false;
 			} catch (error) {
+				console.log(error);
+				const err = error.body;
 
-                console.log(error);
-                const err = error.body;
-                
 				if (err.length) {
-					err.forEach(e => this.$root.$emit("notification::show", e));
+					err.forEach((e) =>
+						this.$root.$emit("notification::show", e)
+					);
 				}
 				this.$root.$emit(
 					"sweet-toast::show",
@@ -144,12 +152,12 @@ export default {
 			} finally {
 				this.loading = false;
 			}
-		}
+		},
 	},
 
 	computed: {
 		...mapState("auth", ["user"]),
-		...mapState("conta", ["contas"])
+		...mapState("conta", ["contas"]),
 	},
 
 	mounted() {
@@ -158,8 +166,8 @@ export default {
 	created() {
 		this.$root.$on(
 			"transferencia-form::show",
-			payload => (this.dialog = true)
+			(payload) => (this.dialog = true)
 		);
-	}
+	},
 };
 </script>

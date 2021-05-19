@@ -22,20 +22,21 @@
 </template>
 
 <script>
+
 export default {
-	name: "DatePickers",
+	name: "DatePicker",
 
 	props: ["value"],
 
 	data: vm => ({
-		date: new Date().toLocaleString().substr(0, 10),
-		dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
+		date: vm.value || vm.formataUS(new Date()),
+		dateFormatted: vm.formatDate(vm.value ) || vm.formatDate(vm.formataUS(new Date())),
 		menu: false
 	}),
 
 	watch: {
-		date(val) {
-			this.dateFormatted = this.formatDate(this.date);
+		value(val) {
+			this.dateFormatted = this.formatDate(this.value);
 		}
 	},
 
@@ -50,19 +51,15 @@ export default {
 			this.menu = false;
 			this.$emit("input", this.date);
 		},
-		formataUS(date) {
-			const data = new Date(date);
+        formataUS(data) {
 			const day = data.getDate().toString().padStart(2, "0");
-			const month = data.getMonth().toString().padStart(2, "0");
+			const month = (data.getMonth() + 1).toString().padStart(2, "0");
 			const year = data.getFullYear();
 			return `${year}-${month}-${day}`;
 		},
 	},
 	mounted() {
 		this.$emit("input", this.date);
-		this.$root.$on("seleciona-data", payload => {
-			this.dateFormatted = this.formatDate(payload);
-		});
 	}
 };
 </script>
