@@ -20,6 +20,7 @@ export const ActionSetLogin = ({ commit }, payload) => {
 
 
 export const ActionChecaToken = ({ dispatch, state }) => {
+
     if (state.token) {
         return Promise.resolve(state.token)
     }
@@ -29,9 +30,11 @@ export const ActionChecaToken = ({ dispatch, state }) => {
     if (!token) {
         return Promise.reject(new Error('Token inválido!'))
     }
+
     dispatch('ActionSetToken', token)
 
     const user = storage.getLocalUser()
+
     dispatch("ActionSetUser", user)
 
     return dispatch('ActionValidaToken', { token })

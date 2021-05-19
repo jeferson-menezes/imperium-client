@@ -1,0 +1,4 @@
+// faturas
+export const SET_FATURAS = 'FATURA/SET_FATURAS'
+export const SET_FATURA_ATUAL = 'FATURA/SET_FATURA_ATUAL'
+

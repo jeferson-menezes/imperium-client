@@ -2,24 +2,31 @@
 	<v-dialog v-model="dialog" persistent max-width="330px">
 		<v-card>
 			<v-card-title>
-				<span class="headline">{{form.id ? 'Atualizar':'Adicionar'}} Despesa</span>
+				<span class="headline"
+					>{{ form.id ? "Atualizar" : "Adicionar" }} Despesa</span
+				>
 			</v-card-title>
 			<v-card-text>
 				<v-form ref="form" v-model="valid">
-
-					<v-currency-field v-show="!form.id"
+					<v-currency-field
+						v-show="!form.id"
 						v-model="form.valor"
 						:rules="rules.valor"
-						label="Valor" />
+						label="Valor"
+					/>
 
-					<v-text-field v-model="form.descricao" :rules="rules.descricao" label="Descrição"></v-text-field>
+					<v-text-field
+						v-model="form.descricao"
+						:rules="rules.descricao"
+						label="Descrição"
+					></v-text-field>
 
 					<v-row>
 						<v-col>
-							<date-pickers :data="form.data" @data-selecionada="setData"></date-pickers>
+							<date-picker v-model="form.data"></date-picker>
 						</v-col>
 						<v-col>
-							<time-pickers @hora-selecionada="setHora"></time-pickers>
+							<time-pickers v-model="form.hora"></time-pickers>
 						</v-col>
 					</v-row>
 
@@ -43,14 +50,23 @@
 					<v-switch
 						v-show="!form.id"
 						v-model="form.concluida"
-						:label=" form.concluida ?'Já foi paga' :'Não foi paga'"
+						:label="form.concluida ? 'Já foi paga' : 'Não foi paga'"
 					></v-switch>
 				</v-form>
 			</v-card-text>
 			<v-card-actions>
 				<v-spacer></v-spacer>
-				<v-btn color="blue darken-1" text @click="close()">cancelar</v-btn>
-				<v-btn :loading="loading" :disabled="!valid" color="blue darken-1" text @click="salvar()">salvar</v-btn>
+				<v-btn color="blue darken-1" text @click="close()"
+					>cancelar</v-btn
+				>
+				<v-btn
+					:loading="loading"
+					:disabled="!valid"
+					color="blue darken-1"
+					text
+					@click="salvar()"
+					>salvar</v-btn
+				>
 			</v-card-actions>
 		</v-card>
 	</v-dialog>
@@ -59,17 +75,16 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import { required } from "../../shared/rules";
-import DatePickers from "../../shared/components/DatePickers";
+import DatePicker from "../../shared/components/DatePicker";
+
 import TimePickers from "../../shared/components/TimePicker";
 import { Toast } from "../../shared/models/toast";
-import { parseISO } from "date-fns";
-import { zonedTimeToUtc } from "date-fns-tz";
-import VCurrencyField from '../../shared/components/VCurrencyField'
+import VCurrencyField from "../../shared/components/VCurrencyField";
 
 export default {
 	name: "DespesaForm",
 
-	components: {VCurrencyField, DatePickers, TimePickers },
+	components: { VCurrencyField, DatePicker, TimePickers },
 
 	data: () => ({
 		dialog: false,
@@ -84,14 +99,14 @@ export default {
 			hora: "",
 			concluida: true,
 			categoriaId: 0,
-			contaId: 0
+			contaId: 0,
 		},
 		rules: {
 			valor: [required("O valor é obrigatório!")],
 			descricao: [required("A descrição é obrigatória!")],
 			categoria: [required("A Categoria é obrigatório")],
-			conta: [required("A Conta é obrigatório")]
-		}
+			conta: [required("A Conta é obrigatório")],
+		},
 	}),
 
 	methods: {
@@ -100,7 +115,7 @@ export default {
 		...mapActions("despesa", [
 			"ActionAdicionarDespesa",
 			"ActionDetalharDespesa",
-			"ActionAtualizarDespesa"
+			"ActionAtualizarDespesa",
 		]),
 
 		close() {
@@ -120,19 +135,14 @@ export default {
 
 		async detelharForm(id) {
 			try {
-
-
 				const { data } = await this.ActionDetalharDespesa({ id });
-				
-				Object.keys(this.form).forEach(e => {
+
+				Object.keys(this.form).forEach((e) => {
 					if (e === "categoriaId")
 						this.form.categoriaId = data.categoria.id;
 					else if (e === "contaId") this.form.contaId = data.conta.id;
 					else this.form[e] = data[e];
 				});
-
-				this.$root.$emit("seleciona-data", data.data);
-				this.$root.$emit("seleciona-hora", data.hora);
 				this.dialog = true;
 			} catch (error) {
 				console.error(error);
@@ -145,22 +155,12 @@ export default {
 				);
 			}
 		},
-
-		setData(payload) {
-			this.form.data = payload;
-		},
-
-		setHora(payload) {
-			this.form.hora = payload;
-		},
-
 		async salvar() {
 			try {
-
 				this.loading = true;
 
 				let message = "Despesa salva com sucesso!";
-				
+
 				if (this.form.id) {
 					await this.ActionAtualizarDespesa(this.form);
 					message = "Despesa atualizada com sucesso!";
@@ -171,12 +171,15 @@ export default {
 					new Toast(message, "success")
 				);
 
+				if (this.form.id) this.close();
+
 				this.resetForm();
-			
 			} catch (error) {
 				const err = error.body;
 				if (err.length) {
-					err.forEach(e => this.$root.$emit("notification::show", e));
+					err.forEach((e) =>
+						this.$root.$emit("notification::show", e)
+					);
 				}
 				this.$root.$emit(
 					"sweet-toast::show",
@@ -185,8 +188,8 @@ export default {
 						"error"
 					)
 				);
-			} finally{
-				this.loading = false
+			} finally {
+				this.loading = false;
 			}
 		},
 
@@ -198,13 +201,13 @@ export default {
 				if (tipo === "string") this.form[field] = "";
 				if (tipo === "boolean") this.form[field] = true;
 			}
-		}
+		},
 	},
 
 	computed: {
 		...mapState("auth", ["user"]),
 		...mapState("conta", ["contas"]),
-		...mapState("categoria", ["categorias"])
+		...mapState("categoria", ["categorias"]),
 	},
 
 	mounted() {
@@ -213,10 +216,10 @@ export default {
 	},
 
 	created() {
-		this.$root.$on("despesa-form::show", payload => {
+		this.$root.$on("despesa-form::show", (payload) => {
 			if (payload) this.populaForm(payload);
 			else this.dialog = true;
 		});
-	}
+	},
 };
 </script>
