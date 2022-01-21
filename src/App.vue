@@ -61,7 +61,7 @@
 
 		<v-footer v-show="isLogged()" app class="mt-3">
 		 	<v-row align="center" justify="space-around">
-				Jeferson Menezes 2020
+				Jeferson Menezes - 2020 - Version: 1.0.1
 			</v-row>
 		</v-footer>
 	</v-app>
