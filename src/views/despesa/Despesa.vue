@@ -21,7 +21,6 @@
               ></v-text-field>
 
               <v-spacer></v-spacer>
-              <despesa-form></despesa-form>
               <v-btn
                 fab
                 small
@@ -103,7 +102,6 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import DespesaForm from "./DespesaForm";
 import DespesaAlteraConta from "./DespesaAlteraConta";
 import DespesaAlteraValor from "./DespesaAlteraValor";
 
@@ -115,7 +113,6 @@ export default {
   name: "Despesa",
 
   components: {
-    DespesaForm,
     DespesaAlteraConta,
     DespesaAlteraValor,
   },

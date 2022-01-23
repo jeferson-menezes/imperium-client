@@ -40,7 +40,6 @@ export default {
 
 	watch: {
 		value(v) {
-			console.log(this.value);
 			this.time = this.value.substr(0, 5)
 		},
 	},

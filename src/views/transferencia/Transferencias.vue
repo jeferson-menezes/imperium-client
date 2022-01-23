@@ -4,7 +4,6 @@
 		<v-card-title>
 			<v-icon x-large color="purple accent-2">mdi-bookmark</v-icon>Transferencias
 			<v-spacer></v-spacer>
-			<transferencia-form></transferencia-form>
 			<v-btn
 				fab
 				small
@@ -56,12 +55,11 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import TransferenciaForm from "./TransferenciaForm";
 
 export default {
 	name: "Transferencias",
 
-	components: { TransferenciaForm },
+	components: {  },
 
 	data: () => ({
 		loadingData: false,

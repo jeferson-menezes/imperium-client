@@ -223,7 +223,6 @@ export default {
 
 	created() {
 		this.$root.$on("receita-form::show", (payload) => {
-			console.log(payload);
 			if (payload) this.populaForm(payload);
 			else this.dialog = true;
 		});

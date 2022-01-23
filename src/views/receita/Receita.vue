@@ -21,7 +21,6 @@
               ></v-text-field>
 
               <v-spacer></v-spacer>
-              <receita-form></receita-form>
               <v-btn
                 fab
                 small
@@ -107,7 +106,6 @@
 import { mapActions, mapState } from "vuex";
 import ReceitaAlteraConta from "./ReceitaAlteraConta";
 import ReceitaAlteraValor from "./ReceitaAlteraValor";
-import ReceitaForm from "./ReceitaForm";
 
 import { Confirm } from "../../shared/models/confirm";
 import { Alert } from "../../shared/models/alert";
@@ -117,7 +115,6 @@ export default {
   name: "Receita",
 
   components: {
-    ReceitaForm,
     ReceitaAlteraConta,
     ReceitaAlteraValor,
   },
