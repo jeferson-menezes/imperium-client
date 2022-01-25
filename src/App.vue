@@ -1,6 +1,5 @@
 <template>
   <v-app>
-      
     <loading-overlay></loading-overlay>
     <sweet-toast></sweet-toast>
     <sweet-confirm></sweet-confirm>
@@ -8,10 +7,10 @@
     <notification></notification>
     <Calculadora />
 
-    <DespesaForm />
-    <ReceitaForm />
-    <TransferenciaForm />
-    <v-navigation-drawer v-show="isLogged()" app v-model="drawer">
+    <v-navigation-drawer v-if="isLogged()" app v-model="drawer">
+      <DespesaForm />
+      <ReceitaForm />
+      <TransferenciaForm />
       <v-list>
         <v-list-item
           v-for="(item, index) in routerLinks"
@@ -70,9 +69,9 @@
 
     <v-footer v-show="isLogged()" app class="mt-3">
       <v-row align="center" justify="space-around">
-        Jeferson Menezes - 2020 - Version: 1.0.2
+        Jeferson Menezes - 2020 - Version: 1.0.3
       </v-row>
-    <SpeedDial />
+      <SpeedDial />
     </v-footer>
   </v-app>
 </template>
@@ -91,7 +90,7 @@ import SpeedDial from "./shared/components/SpeedDial.vue";
 
 import DespesaForm from "./views/despesa/DespesaForm";
 import ReceitaForm from "./views/receita/ReceitaForm";
-import TransferenciaForm from  './views/transferencia/TransferenciaForm.vue'
+import TransferenciaForm from "./views/transferencia/TransferenciaForm.vue";
 
 export default {
   name: "App",
@@ -108,7 +107,7 @@ export default {
     SpeedDial,
     DespesaForm,
     ReceitaForm,
-    TransferenciaForm
+    TransferenciaForm,
   },
 
   data: () => ({

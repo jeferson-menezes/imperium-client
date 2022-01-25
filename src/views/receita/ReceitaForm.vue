@@ -33,7 +33,7 @@
 					<v-select
 						:rules="rules.categoria"
 						v-model="form.categoriaId"
-						:items="categorias"
+						:items="getCategoriasReceita()"
 						item-value="id"
 						item-text="nome"
 						label="Categoria"
@@ -79,7 +79,7 @@
 
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import { required } from "../../shared/rules";
 import DatePicker from "../../shared/components/DatePicker";
 import TimePickers from "../../shared/components/TimePicker";
@@ -115,7 +115,7 @@ export default {
 	}),
 
 	methods: {
-		...mapActions("categoria", ["ActionListarCategoriasPorNatureza"]),
+		...mapActions("categoria", ["ActionListarCategorias"]),
 		...mapActions("conta", ["ActionListarContasPorUsuario"]),
 		...mapActions("receita", [
 			"ActionAdicionarReceita",
@@ -123,6 +123,7 @@ export default {
 			"ActionAtualizarReceita",
 		]),
 
+...mapGetters('categoria',['getCategoriasReceita']),
 		close() {
 			this.resetForm();
 			this.dialog = false;
@@ -213,11 +214,10 @@ export default {
 	computed: {
 		...mapState("auth", ["user"]),
 		...mapState("conta", ["contas"]),
-		...mapState("categoria", ["categorias"]),
 	},
 
 	mounted() {
-		this.ActionListarCategoriasPorNatureza({ natureza: "RECEITA" });
+		this.ActionListarCategorias();
 		this.ActionListarContasPorUsuario({ id: this.user.id });
 	},
 
