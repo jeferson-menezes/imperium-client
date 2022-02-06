@@ -4,7 +4,7 @@ import * as types from './mutation-types'
 
 export const ActionAdicionarReceita = ({ commit }, payload) => {
     return services.receita.adicionar(payload)
-        .then(res => commit(types.ADD_RECEITA, res.data))
+        // .then(res => commit(types.ADD_RECEITA, res.data))
 }
 
 export const ActionListarReceitas = ({ commit }, payload) => {

@@ -69,7 +69,7 @@
 
     <v-footer v-show="isLogged()" app class="mt-3">
       <v-row align="center" justify="space-around">
-        Jeferson Menezes - 2020 - Version: 1.0.3
+        Jeferson Menezes - 2020 - Version: 1.0.4
       </v-row>
       <SpeedDial />
     </v-footer>
@@ -78,7 +78,7 @@
 
 <script>
 import store from "./store";
-import SweetToast from "./shared/components/SweetToast";
+import SweetToast from "./shared/components/SweetToast.vue";
 import SweetConfirm from "./shared/components/SweetConfirm";
 import SweetAlert from "./shared/components/SweetAlert";
 import LoadingProgress from "./shared/components/LoadingProgress";
@@ -132,6 +132,7 @@ export default {
       // );
     },
   },
+
   mounted() {
     this.$root.$emit("loading-overlay::hide");
   },

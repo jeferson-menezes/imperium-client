@@ -116,7 +116,7 @@ export default {
       "ActionAtualizarDespesa",
     ]),
 
-    ...mapGetters("categoria", ['getCategoriasDespesa']),
+    ...mapGetters("categoria", ["getCategoriasDespesa"]),
     close() {
       this.resetForm();
       this.dialog = false;
@@ -170,6 +170,7 @@ export default {
 
         this.resetForm();
       } catch (error) {
+        console.log(error);
         const err = error.body;
         if (err.length) {
           err.forEach((e) => this.$root.$emit("notification::show", e));
