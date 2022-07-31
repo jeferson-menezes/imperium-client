@@ -69,7 +69,7 @@
 
     <v-footer v-show="isLogged()" app class="mt-3">
       <v-row align="center" justify="space-around">
-        Jeferson Menezes - 2020 - Version: 1.0.4
+        Jeferson Menezes - 2020 - Version: 1.0.5
       </v-row>
       <SpeedDial />
     </v-footer>

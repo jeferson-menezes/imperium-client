@@ -96,7 +96,7 @@
                   fab
                   small
                   elevation="0"
-                  @click="$root.$emit('conta-form::show', item.id)"
+                  @click.stop="$root.$emit('conta-form::show', item.id)"
                 >
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
@@ -105,7 +105,7 @@
                   <conta-saldo-form :conta="item"></conta-saldo-form>
                 </v-btn>
 
-                <v-btn fab small elevation="0" @click="inativaConta(item)">
+                <v-btn fab small elevation="0" @click.stop="inativaConta(item)">
                   <v-icon v-if="item.ativo">mdi-eye-off</v-icon>
                   <v-icon v-else>mdi-eye</v-icon>
                 </v-btn>

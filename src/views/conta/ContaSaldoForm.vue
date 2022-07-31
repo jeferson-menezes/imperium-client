@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-icon @click="show()">mdi-currency-usd</v-icon>
+		<v-icon @click.stop="show()">mdi-currency-usd</v-icon>
 
 		<v-dialog v-model="dialog" persistent max-width="250px">
 			<v-card>

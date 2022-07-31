@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import {mapActions} from 'vuex'
 import { required, email } from "../../shared/rules";
 import { Toast } from "../../shared/models/toast"
 
